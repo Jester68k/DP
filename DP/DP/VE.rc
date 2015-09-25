@@ -1,0 +1,1079 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#ifndef APSTUDIO_INVOKED
+#include "targetver.h"
+#endif
+#include "afxres.h"
+#include "verrsrc.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 日本語 (日本) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+#pragma code_page(932)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#ifndef APSTUDIO_INVOKED\r\n"
+    "#include ""targetver.h""\r\n"
+    "#endif\r\n"
+    "#include ""afxres.h""\r\n"
+    "#include ""verrsrc.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)\r\n"
+    "LANGUAGE 17, 1\r\n"
+    "#include ""res\\VE.rc2""  // Microsoft Visual C++ 以外で編集されたリソース\r\n"
+    "#include ""l.JPN\\afxres.rc""      // 標準コンポーネント\r\n"
+    "#if !defined(_AFXDLL)\r\n"
+    "#include ""l.JPN\\afxprint.rc""        // 印刷/印刷プレビュー リソース\r\n"
+    "#include ""l.JPN\\afxribbon.rc""        // MFC リボンおよびコントロール バー リソース\r\n"
+    "#endif\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\VE.ico"
+IDR_DPTYPE              ICON                    "res\\VEDoc.ico"
+IDI_OUTPUT_WND          ICON                    "res\\output_wnd.ico"
+IDI_OUTPUT_WND_HC       ICON                    "res\\output_wnd_hc.ico"
+IDI_PROPERTIES_WND      ICON                    "res\\properties_wnd.ico"
+IDI_PROPERTIES_WND_HC   ICON                    "res\\properties_wnd_hc.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_MAINFRAME_256       BITMAP                  "res\\Toolbar256.bmp"
+IDR_PROPERTIES          BITMAP                  "res\\properties.bmp"
+IDB_PROPERTIES_HC       BITMAP                  "res\\properties_hc.bmp"
+IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_MAINFRAME_256 TOOLBAR 16, 15
+BEGIN
+    BUTTON      ID_FILE_NEW
+    BUTTON      ID_FILE_OPEN
+    BUTTON      ID_FILE_SAVE
+    SEPARATOR
+    BUTTON      ID_EDIT_CUT
+    BUTTON      ID_EDIT_COPY
+    BUTTON      ID_EDIT_PASTE
+    SEPARATOR
+    BUTTON      ID_FILE_PRINT
+    SEPARATOR
+    BUTTON      ID_MDL
+    SEPARATOR
+    BUTTON      ID_VAR
+    SEPARATOR
+    BUTTON      ID_PROC
+    BUTTON      ID_IF
+    BUTTON      ID_SELECT
+    BUTTON      ID_FOR
+    BUTTON      ID_WHILE
+    BUTTON      ID_DOWHILE
+    BUTTON      ID_COMMENT
+    SEPARATOR
+    BUTTON      ID_BUILD_EXEC
+    SEPARATOR
+    BUTTON      ID_APP_ABOUT
+END
+
+IDR_PROPERTIES TOOLBAR 16, 15
+BEGIN
+    BUTTON      ID_EXPAND_ALL
+    BUTTON      ID_SORTPROPERTIES
+    BUTTON      ID_PROPERTIES1
+    BUTTON      ID_PROPERTIES2
+END
+
+IDR_MAINFRAME TOOLBAR 16, 15
+BEGIN
+    BUTTON      ID_FILE_NEW
+    BUTTON      ID_FILE_OPEN
+    BUTTON      ID_FILE_SAVE
+    BUTTON      ID_FILE_PRINT
+    SEPARATOR
+    BUTTON      ID_EDIT_CUT
+    BUTTON      ID_EDIT_COPY
+    BUTTON      ID_EDIT_PASTE
+    SEPARATOR
+    BUTTON      ID_INSERT_M
+    SEPARATOR
+    BUTTON      ID_INSERT_VAR
+    SEPARATOR
+    BUTTON      ID_INSERT_PROCESS
+    BUTTON      ID_INSERT_IF
+    BUTTON      ID_INSERT_SWITCH
+    BUTTON      ID_INSERT_FOR
+    BUTTON      ID_INSERT_WHILE
+    BUTTON      ID_INSERT_DO_WHILE
+    BUTTON      ID_INSERT_COMMENT
+    SEPARATOR
+    BUTTON      ID_BUILD_EXEC
+    SEPARATOR
+    BUTTON      ID_APP_ABOUT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINFRAME MENU
+BEGIN
+    POPUP "ファイル(&F)"
+    BEGIN
+        MENUITEM "新規作成(&N)\tCtrl+N",            ID_FILE_NEW
+        MENUITEM "開く(&O)...\tCtrl+O",           ID_FILE_OPEN
+        MENUITEM "閉じる(&C)",                     ID_FILE_CLOSE
+        MENUITEM SEPARATOR
+        MENUITEM "最近使ったファイル",                   ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "アプリケーションの終了(&X)",             ID_APP_EXIT
+    END
+    POPUP "表示(&V)"
+    BEGIN
+        POPUP "ツール バーとドッキング ウィンドウ(&T)"
+        BEGIN
+            MENUITEM "<プレースホルダー>",                  ID_VIEW_TOOLBAR
+        END
+        MENUITEM "ステータス バー(&S)",                ID_VIEW_STATUS_BAR
+        POPUP "アプリケーションの外観(&A)"
+        BEGIN
+            MENUITEM "Windows 2000(&2)",            ID_VIEW_APPLOOK_WIN_2000
+            MENUITEM "Office XP(&X)",               ID_VIEW_APPLOOK_OFF_XP
+            MENUITEM "Windows XP(&W)",              ID_VIEW_APPLOOK_WIN_XP
+            MENUITEM "Office 2003(&3)",             ID_VIEW_APPLOOK_OFF_2003
+            MENUITEM "Visual Studio 200&5",         ID_VIEW_APPLOOK_VS_2005
+            MENUITEM "Visual Studio 200&8",         ID_VIEW_APPLOOK_VS_2008
+            POPUP "Office 2007(&7)"
+            BEGIN
+                MENUITEM "ブルー スタイル(&B)",                ID_VIEW_APPLOOK_OFF_2007_BLUE
+                MENUITEM "ブラック スタイル(&L)",               ID_VIEW_APPLOOK_OFF_2007_BLACK
+                MENUITEM "シルバー スタイル(&S)",               ID_VIEW_APPLOOK_OFF_2007_SILVER
+                MENUITEM "アクア スタイル(&A)",                ID_VIEW_APPLOOK_OFF_2007_AQUA
+            END
+        END
+        MENUITEM "分割(&P)",                      ID_WINDOW_SPLIT
+    END
+    POPUP "ヘルプ(&H)"
+    BEGIN
+        MENUITEM "バージョン情報 VE(&A)...",           ID_APP_ABOUT
+    END
+END
+
+IDR_DPTYPE MENU
+BEGIN
+    POPUP "ファイル(&F)"
+    BEGIN
+        MENUITEM "新規作成(&N)\tCtrl+N",            ID_FILE_NEW
+        MENUITEM "開く(&O)...\tCtrl+O",           ID_FILE_OPEN
+        MENUITEM "閉じる(&C)",                     ID_FILE_CLOSE
+        MENUITEM "上書き保存(&S)\tCtrl+S",           ID_FILE_SAVE
+        MENUITEM "名前を付けて保存(&A)...",             ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "最近使ったファイル",                   ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "アプリケーションの終了(&X)",             ID_APP_EXIT
+    END
+    POPUP "編集(&E)"
+    BEGIN
+        MENUITEM "元に戻す(&U)\tCtrl+Z",            ID_EDIT_UNDO
+        MENUITEM SEPARATOR
+        MENUITEM "切り取り(&T)\tCtrl+X",            ID_EDIT_CUT
+        MENUITEM "コピー(&C)\tCtrl+C",             ID_EDIT_COPY
+        MENUITEM "貼り付け(&P)\tCtrl+V",            ID_EDIT_PASTE
+        MENUITEM SEPARATOR
+        MENUITEM "削除(&D)\tDelete",              ID_EDIT_DELETE
+    END
+    POPUP "表示(&V)"
+    BEGIN
+        POPUP "ツール バーとドッキング ウィンドウ(&T)"
+        BEGIN
+            MENUITEM "<プレースホルダー>",                  ID_VIEW_TOOLBAR
+        END
+        MENUITEM "ステータス バー(&S)",                ID_VIEW_STATUS_BAR
+        POPUP "アプリケーションの外観(&A)"
+        BEGIN
+            MENUITEM "Windows 2000(&2)",            ID_VIEW_APPLOOK_WIN_2000
+            MENUITEM "Office XP(&X)",               ID_VIEW_APPLOOK_OFF_XP
+            MENUITEM "Windows XP(&W)",              ID_VIEW_APPLOOK_WIN_XP
+            MENUITEM "Office 2003(&3)",             ID_VIEW_APPLOOK_OFF_2003
+            MENUITEM "Visual Studio 200&5",         ID_VIEW_APPLOOK_VS_2005
+            MENUITEM "Visual Studio 200&8",         ID_VIEW_APPLOOK_VS_2008
+            POPUP "Office 2007(&7)"
+            BEGIN
+                MENUITEM "ブルー スタイル(&B)",                ID_VIEW_APPLOOK_OFF_2007_BLUE
+                MENUITEM "ブラック スタイル(&L)",               ID_VIEW_APPLOOK_OFF_2007_BLACK
+                MENUITEM "シルバー スタイル(&S)",               ID_VIEW_APPLOOK_OFF_2007_SILVER
+                MENUITEM "アクア スタイル(&A)",                ID_VIEW_APPLOOK_OFF_2007_AQUA
+            END
+        END
+        MENUITEM "分割(&P)",                      ID_WINDOW_SPLIT
+        MENUITEM "ＰＡＤ図整形(&A)",                  ID_VIEW_ADJUST
+    END
+    POPUP "挿入(&I)"
+    BEGIN
+        POPUP "ＰＡＤ図形(&P)"
+        BEGIN
+            MENUITEM "処理(&P)",                      ID_INSERT_PROCESS
+            MENUITEM "選択(if)(&I)",                  ID_INSERT_IF
+            MENUITEM "選択(switch)(&S)",              ID_INSERT_SWITCH
+            MENUITEM "反復(for)(&F)",                 ID_INSERT_FOR
+            MENUITEM "反復(while)(&W)",               ID_INSERT_WHILE
+            MENUITEM "反復(do～while)(&D)",            ID_INSERT_DO_WHILE
+            MENUITEM "コメント(&C)",                    ID_INSERT_COMMENT
+        END
+        MENUITEM "変数(&V)",                      ID_INSERT_VAR
+        MENUITEM "ﾓｼﾞｭｰﾙ(&M)",                  ID_INSERT_M
+    END
+    POPUP "ﾋﾞﾙﾄﾞ(&B)"
+    BEGIN
+        MENUITEM "ｿｰｽ･ｺｰﾄﾞを出力(&S)",             ID_SAVE_SOURCE_FILE
+        MENUITEM "ﾋﾞﾙﾄﾞ(&B)\tF7",               ID_BUILD_BUILD
+        MENUITEM SEPARATOR
+        MENUITEM "実行(&E)\tF5",                  ID_BUILD_EXEC
+    END
+    POPUP "ﾂｰﾙ(&T)"
+    BEGIN
+        MENUITEM "ｵﾌﾟｼｮﾝ(&O)",                  ID_TOOL_OPTION
+    END
+    POPUP "ウィンドウ(&W)"
+    BEGIN
+        MENUITEM "新しいウィンドウを開く(&N)",             ID_WINDOW_NEW
+    END
+    POPUP "ヘルプ(&H)"
+    BEGIN
+        MENUITEM "バージョン情報 VE(&A)...",           ID_APP_ABOUT
+    END
+END
+
+IDR_OUTPUT_POPUP MENU
+BEGIN
+    POPUP "ポップアップ"
+    BEGIN
+        MENUITEM "コピー(&C)",                     ID_EDIT_COPY
+        MENUITEM "クリア(&C)",                     ID_EDIT_CLEAR
+        MENUITEM SEPARATOR
+        MENUITEM "非表示(&H)",                     ID_VIEW_OUTPUTWND
+    END
+END
+
+IDR_THEME_MENU MENU
+BEGIN
+    MENUITEM "Office 2007 (ブルー スタイル)(&B)",  ID_VIEW_APPLOOK_OFF_2007_BLUE
+    MENUITEM "Office 2007 (ブラック スタイル)(&L)", ID_VIEW_APPLOOK_OFF_2007_BLACK
+    MENUITEM "Office 2007 (シルバー スタイル)(&S)", ID_VIEW_APPLOOK_OFF_2007_SILVER
+    MENUITEM "Office 2007 (アクア スタイル)(&A)",  ID_VIEW_APPLOOK_OFF_2007_AQUA
+    MENUITEM "Windows 7(&D)",               ID_VIEW_APPLOOK_WINDOWS_7
+END
+
+CG_IDR_POPUP_LEFT_VIEW MENU
+BEGIN
+    POPUP "_ﾎﾟｯﾌﾟｱｯﾌﾟ_"
+    BEGIN
+        MENUITEM "挿入(&I)",                      ID_INSERT
+        MENUITEM "呼び出し線を引く(&L)",                ID_LINE
+        MENUITEM SEPARATOR
+        MENUITEM "切り取り(&T)",                    ID_EDIT_CUT
+        MENUITEM "ｺﾋﾟｰ(&C)",                    ID_EDIT_COPY
+        MENUITEM "貼り付け(&P)",                    ID_EDIT_PASTE
+        MENUITEM SEPARATOR
+        MENUITEM "削除(&D)",                      ID_EDIT_DELETE
+        MENUITEM "実行(&E)",                      ID_EXEC
+        MENUITEM "単体テスト・ウインドウを開く(&M)",          IDC_TEST
+        MENUITEM SEPARATOR
+        MENUITEM "プロパティ(&O)",                   ID_PROPERTIES
+    END
+END
+
+IDR_EDIT_MENU MENU
+BEGIN
+    POPUP "_ﾎﾟｯﾌﾟｱｯﾌﾟ_"
+    BEGIN
+        POPUP "挿入(&I)"
+        BEGIN
+            MENUITEM "処理(&P)",                      ID_INSERT_PROCESS
+            MENUITEM "選択if(&I)",                    ID_INSERT_IF
+            MENUITEM "選択(switch)(&S)",              ID_INSERT_SWITCH
+            MENUITEM "反復for(&F)",                   ID_INSERT_FOR
+            MENUITEM "反復(while)(&W)",               ID_INSERT_WHILE
+            MENUITEM "反復(do～while)(&D)",            ID_INSERT_DO_WHILE
+            MENUITEM "コメント(&Comment)",              ID_INSERT_COMMENT
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "切り取り(&T)",                    ID_EDIT_CUT
+        MENUITEM "ｺﾋﾟｰ(&C)",                    ID_EDIT_COPY
+        MENUITEM "貼り付け(&P)",                    ID_EDIT_PASTE_P
+        MENUITEM SEPARATOR
+        MENUITEM "削除(&D)",                      ID_EDIT_DELETE
+        MENUITEM SEPARATOR
+        MENUITEM "整形(&A)",                      ID_VIEW_ADJUST
+        MENUITEM "プロパティ(&Y)",                   ID_PADPROPERTY
+    END
+END
+
+CG_IDR_POPUP_VARVIEW MENU
+BEGIN
+    POPUP "_ﾎﾟｯﾌﾟｱｯﾌﾟ_"
+    BEGIN
+        MENUITEM "挿入(&I)",                      ID_INSERT_VAR
+        MENUITEM "削除(&D)",                      ID_EDIT_DELETE
+        MENUITEM SEPARATOR
+        MENUITEM "プロパティ(&Y)",                   ID_VAR_PROPERTY
+    END
+END
+
+CG_IDR_POPUP_CLASS_VIEW MENU
+BEGIN
+    POPUP "_ﾎﾟｯﾌﾟｱｯﾌﾟ_"
+    BEGIN
+        MENUITEM "挿入(&I)",                      ID_INSERT_CLS
+        MENUITEM "削除(&D)",                      ID_EDIT_DELETE
+        MENUITEM SEPARATOR
+        MENUITEM "プロパティ(&Y)",                   ID_CLS_PROPERTY
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS
+BEGIN
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
+    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL, NOINVERT
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
+    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT, NOINVERT
+    VK_DELETE,      ID_EDIT_DELETE,         VIRTKEY, NOINVERT
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT, NOINVERT
+    VK_F1,          ID_HELP,                VIRTKEY, NOINVERT
+    VK_F1,          ID_CONTEXT_HELP,        VIRTKEY, SHIFT, NOINVERT
+    VK_F5,          ID_BUILD_EXEC,          VIRTKEY, NOINVERT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY, NOINVERT
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT, NOINVERT
+    VK_F7,          ID_BUILD_BUILD,         VIRTKEY, NOINVERT
+    VK_F7,          ID_BUILD_COMPILE,       VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      ID_INSERT_PADF,         VIRTKEY, NOINVERT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT, NOINVERT
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 203, 43
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "誰でもプログラマのバージョン情報"
+FONT 9, "ＭＳ Ｐゴシック", 0, 0, 0x0
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,10,20,20
+    LTEXT           "誰でもプログラマ Version 0.5.0.0",IDC_STATIC,40,10,100,8,SS_NOPREFIX
+    DEFPUSHBUTTON   "OK",IDOK,146,6,50,14,WS_GROUP
+    LTEXT           "Copycenter Jester 2009-2015",IDC_STATIC,41,23,88,8
+END
+
+IDD_MPROPPAGE1 DIALOG 0, 0, 219, 228
+STYLE DS_SETFONT | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "モジュール"
+FONT 9, "ＭＳ Ｐゴシック"
+BEGIN
+    LTEXT           "関数名(&F)",IDC_STATIC,38,17,30,8
+    EDITTEXT        IDC_MNAME,104,15,98,14,ES_AUTOHSCROLL
+    LTEXT           "引数(&A)",IDC_STATIC,42,39,24,8
+    EDITTEXT        IDC_MARG,104,37,98,14,ES_AUTOHSCROLL
+    LTEXT           "戻り値の型(&R)",IDC_STATIC,33,60,43,8
+    COMBOBOX        IDC_MRET_TYPE,104,59,98,111,CBS_DROPDOWNLIST | CBS_NOINTEGRALHEIGHT | CBS_DISABLENOSCROLL | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "ポインタ・フラグ(&P)",IDC_STATIC,27,79,54,8
+    COMBOBOX        IDC_MRET_POINTER,104,78,98,111,CBS_DROPDOWNLIST | CBS_NOINTEGRALHEIGHT | CBS_DISABLENOSCROLL | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "構造体名・共用体・クラス名",IDC_STATIC,18,101,80,8
+    EDITTEXT        IDC_MRET_STRUCT,104,97,98,14,ES_AUTOHSCROLL | WS_DISABLED
+    LTEXT           "アクセス指定子",IDC_STATIC,33,118,46,8
+    COMBOBOX        IDC_MACCESSTYPE,104,116,98,147,CBS_DROPDOWNLIST | CBS_NOINTEGRALHEIGHT | CBS_DISABLENOSCROLL | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "モジュールのコメント(&C)",IDC_STATIC,20,137,70,8
+    EDITTEXT        IDC_MCOMMENT,104,135,98,14,ES_AUTOHSCROLL
+    LTEXT           "PAD図形と矩形コメントの総数",IDC_STATIC,11,161,88,8
+    EDITTEXT        IDC_MNUMPADFS,104,158,98,14,ES_AUTOHSCROLL | WS_DISABLED
+    LTEXT           "ローカル変数の数",IDC_STATIC,28,184,54,8
+    EDITTEXT        IDC_MNUM_VARS,104,181,98,14,ES_AUTOHSCROLL | WS_DISABLED
+    CONTROL         "再帰",IDC_MRECURSIVE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,203,30,10
+    CONTROL         "インライン",IDC_MINLINE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,51,203,45,10
+    LTEXT           "関数の種類",IDC_STATIC,105,203,35,8
+    COMBOBOX        IDC_MFUNCTYPE,150,200,48,52,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_PPROPPAGE1 DIALOG 0, 0, 207, 185
+STYLE DS_SETFONT | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "ＰＡＤ図形または矩形コメント"
+FONT 9, "ＭＳ Ｐゴシック"
+BEGIN
+    CONTROL         "処理(&process)",IDC_PT0,"Button",BS_AUTORADIOBUTTON | WS_GROUP,13,19,57,10
+    CONTROL         "選択(&if)",IDC_PT1,"Button",BS_AUTORADIOBUTTON,70,19,38,10
+    CONTROL         "選択(&switch)",IDC_PT2,"Button",BS_AUTORADIOBUTTON,118,19,53,10
+    CONTROL         "反復(&for)",IDC_PT3,"Button",BS_AUTORADIOBUTTON,13,37,47,10
+    CONTROL         "反復(&while)",IDC_PT4,"Button",BS_AUTORADIOBUTTON,57,37,55,10
+    CONTROL         "反復(&do while)",IDC_PT5,"Button",BS_AUTORADIOBUTTON,118,37,58,10
+    CONTROL         "矩形コメント(&comment)",IDC_PT6,"Button",BS_AUTORADIOBUTTON,13,55,82,10
+    LTEXT           "選択(switch)のcase",IDC_STATIC,13,80,59,8
+    EDITTEXT        IDC_CASE,13,91,82,14,ES_AUTOHSCROLL | WS_DISABLED
+    LTEXT           "処理内容または条件式または矩形コメントの内容",IDC_STATIC,13,113,143,8
+    EDITTEXT        IDC_PADSTR,13,126,179,14,ES_AUTOHSCROLL
+    LTEXT           "このPAD図形についてのコメント",IDC_STATIC,13,144,94,8
+    EDITTEXT        IDC_PADCOMMENT,13,158,179,14,ES_AUTOHSCROLL
+    GROUPBOX        "PAD図形のタイプ",IDC_STATIC,7,7,191,70,WS_GROUP
+END
+
+IDD_VAR DIALOG 0, 0, 303, 158
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "変数・定数・マクロ・構造体・共有体・クラスのプロパティ"
+FONT 9, "ＭＳ Ｐゴシック"
+BEGIN
+    LTEXT           "種類",IDC_STATIC,16,13,15,8
+    COMBOBOX        IDC_KIND,41,9,39,50,CBS_DROPDOWNLIST | CBS_NOINTEGRALHEIGHT | CBS_DISABLENOSCROLL | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "スコープ",IDC_STATIC,108,12,26,8
+    COMBOBOX        IDC_SCOPE,138,9,90,51,CBS_DROPDOWNLIST | CBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "型",IDC_STATIC,19,27,8,8
+    COMBOBOX        IDC_TYPE,41,25,62,136,CBS_DROPDOWNLIST | CBS_NOINTEGRALHEIGHT | CBS_DISABLENOSCROLL | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "通常の変数・ポインタ",IDC_STATIC,108,28,62,8
+    COMBOBOX        IDC_POINTER,173,25,115,53,CBS_DROPDOWNLIST | CBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "アクセス指定子",IDC_STATIC,19,44,46,8
+    COMBOBOX        IDC_ACCESSTYPE,66,42,34,54,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "構造体・共用体・クラス名",IDC_STATIC,17,61,74,8
+    EDITTEXT        IDC_STRUCT,95,59,187,14,ES_AUTOHSCROLL
+    LTEXT           "名前",IDC_STATIC,19,77,15,8
+    EDITTEXT        IDC_NAME,61,75,221,14,ES_AUTOHSCROLL
+    LTEXT           "初期値・内容",IDC_STATIC,17,97,39,8
+    EDITTEXT        IDC_START,61,95,221,14,ES_AUTOHSCROLL
+    LTEXT           "コメント",IDC_STATIC,19,116,22,8
+    EDITTEXT        IDC_COMMENT,61,114,221,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,59,137,50,14
+    PUSHBUTTON      "ｷｬﾝｾﾙ",IDCANCEL,117,137,50,14
+END
+
+IDD_OPTION DIALOGEX 0, 0, 307, 90
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "オプション"
+FONT 9, "ＭＳ Ｐゴシック", 0, 0, 0x0
+BEGIN
+    EDITTEXT        IDC_PATH,17,41,210,14,ES_AUTOHSCROLL | WS_DISABLED
+    PUSHBUTTON      "参照",IDC_PATH_BROWSE,234,41,50,14,WS_DISABLED
+    DEFPUSHBUTTON   "OK",IDOK,99,69,50,14
+    PUSHBUTTON      "ｷｬﾝｾﾙ",IDCANCEL,158,69,50,14
+    COMBOBOX        IDC_VC_ENV,61,20,110,72,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "コンパイラ",IDC_STATIC,22,22,31,8
+END
+
+IDD_CLS DIALOG 0, 0, 223, 119
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "グローバル・構造体・共用体・クラス"
+FONT 9, "ＭＳ Ｐゴシック"
+BEGIN
+    LTEXT           "種類",IDC_STATIC,13,9,15,8
+    COMBOBOX        IDC_CLSTYPE,34,7,48,76,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "名前",IDC_STATIC,89,9,15,8
+    EDITTEXT        IDC_CNAME,108,7,101,14,ES_AUTOHSCROLL
+    LTEXT           "アクセス指定子",IDC_STATIC,14,28,46,8
+    COMBOBOX        IDC_ACCESSTYPE,65,26,60,53,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "基底クラス",IDC_STATIC,20,45,32,8
+    EDITTEXT        IDC_BASECLASS,65,43,144,14,ES_AUTOHSCROLL
+    LTEXT           "フレンド・クラス",IDC_STATIC,15,62,44,8
+    EDITTEXT        IDC_FRIENDCLASS,65,61,144,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,46,98,50,14
+    PUSHBUTTON      "ｷｬﾝｾﾙ",IDCANCEL,110,98,50,14
+    LTEXT           "変数の数",IDC_STATIC,21,82,28,8
+    EDITTEXT        IDC_CNUMVAR,56,79,40,14,WS_DISABLED
+    LTEXT           "関数の数",IDC_STATIC,101,82,28,8
+    EDITTEXT        IDC_CNUMFUNC,136,81,40,14,WS_DISABLED
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 0,5,0,0
+ PRODUCTVERSION 0,5,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041104b0"
+        BEGIN
+            VALUE "FileDescription", "VE MFC ｱﾌﾟﾘｹｰｼｮﾝ"
+            VALUE "FileVersion", "0.5.0.0"
+            VALUE "InternalName", "VPE"
+            VALUE "LegalCopyright", "None(Copyleft)"
+            VALUE "OriginalFilename", "VE.EXE"
+            VALUE "ProductName", "VE ｱﾌﾟﾘｹｰｼｮﾝ"
+            VALUE "ProductVersion", "0.5.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x411, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 196
+        TOPMARGIN, 6
+        BOTTOMMARGIN, 36
+    END
+
+    IDD_MPROPPAGE1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 208
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 218
+    END
+
+    IDD_PPROPPAGE1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 198
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 179
+    END
+
+    IDD_VAR, DIALOG
+    BEGIN
+        LEFTMARGIN, 16
+        RIGHTMARGIN, 295
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 151
+    END
+
+    IDD_OPTION, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 295
+        TOPMARGIN, 8
+        BOTTOMMARGIN, 83
+    END
+
+    IDD_CLS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 217
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 112
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_VAR DLGINIT
+BEGIN
+    IDC_KIND, 0x403, 5, 0
+0xcf95, 0x9490, "\000" 
+    IDC_KIND, 0x403, 5, 0
+0xe892, 0x9490, "\000" 
+    IDC_KIND, 0x403, 7, 0
+0x7d83, 0x4e83, 0x8d83, "\000" 
+    IDC_SCOPE, 0x403, 5, 0
+0x7561, 0x6f74, "\000" 
+    IDC_SCOPE, 0x403, 18, 0
+0x7473, 0x7461, 0x6369, 0x8328, 0x818d, 0x835b, 0x834a, 0x818b, 0x006a, 
+
+    IDC_SCOPE, 0x403, 23, 0
+0x4f83, 0x8d83, 0x5b81, 0x6f83, 0x8b83, 0xdc82, 0xbd82, 0xcd82, 0x8183, 
+0x9383, 0x6f83, "\000" 
+    IDC_SCOPE, 0x403, 1, 0
+"\000" 
+    IDC_TYPE, 0x403, 1, 0
+"\000" 
+    IDC_TYPE, 0x403, 4, 0
+0x6e69, 0x0074, 
+    IDC_TYPE, 0x403, 13, 0
+0x6e75, 0x6973, 0x6e67, 0x6465, 0x6920, 0x746e, "\000" 
+    IDC_TYPE, 0x403, 5, 0
+0x6863, 0x7261, "\000" 
+    IDC_TYPE, 0x403, 14, 0
+0x6e75, 0x6973, 0x6e67, 0x6465, 0x6320, 0x6168, 0x0072, 
+    IDC_TYPE, 0x403, 6, 0
+0x6873, 0x726f, 0x0074, 
+    IDC_TYPE, 0x403, 15, 0
+0x6e75, 0x6973, 0x6e67, 0x6465, 0x7320, 0x6f68, 0x7472, "\000" 
+    IDC_TYPE, 0x403, 5, 0
+0x6f6c, 0x676e, "\000" 
+    IDC_TYPE, 0x403, 14, 0
+0x6e75, 0x6973, 0x6e67, 0x6465, 0x6c20, 0x6e6f, 0x0067, 
+    IDC_TYPE, 0x403, 6, 0
+0x6c66, 0x616f, 0x0074, 
+    IDC_TYPE, 0x403, 7, 0
+0x6f64, 0x6275, 0x656c, "\000" 
+    IDC_TYPE, 0x403, 5, 0
+0x6f62, 0x6c6f, "\000" 
+    IDC_TYPE, 0x403, 7, 0
+0x5c8d, 0xa291, 0xcc91, "\000" 
+    IDC_TYPE, 0x403, 7, 0
+0xa48b, 0x7097, 0xcc91, "\000" 
+    IDC_TYPE, 0x403, 7, 0
+0x4e83, 0x8983, 0x5883, "\000" 
+    IDC_POINTER, 0x403, 11, 0
+0xca92, 0xed8f, 0xcc82, 0xcf95, 0x9490, "\000" 
+    IDC_POINTER, 0x403, 12, 0
+0x7c83, 0x4383, 0x9383, 0x5e83, 0x2a28, 0x0029, 
+    IDC_POINTER, 0x403, 27, 0
+0x7c83, 0x4383, 0x9383, 0x5e83, 0x4581, 0xd682, 0xcc82, 0x7c83, 0x4383, 
+0x9383, 0x5e83, 0x2a28, 0x292a, "\000" 
+    IDC_POINTER, 0x403, 38, 0
+0x7c83, 0x4383, 0x9383, 0x5e83, 0xd682, 0xcc82, 0x7c83, 0x4383, 0x9383, 
+0x5e83, 0xd682, 0xcc82, 0x7c83, 0x4383, 0x9383, 0x5e83, 0x2a28, 0x2a2a, 
+0x0029, 
+    IDC_ACCESSTYPE, 0x403, 7, 0
+0x7570, 0x6c62, 0x6369, "\000" 
+    IDC_ACCESSTYPE, 0x403, 8, 0
+0x7270, 0x7669, 0x7461, 0x0065, 
+    IDC_ACCESSTYPE, 0x403, 10, 0
+0x7270, 0x746f, 0x6365, 0x6574, 0x0064, 
+    0
+END
+
+IDD_MPROPPAGE1 DLGINIT
+BEGIN
+    IDC_MRET_TYPE, 0x403, 5, 0
+0x6f76, 0x6469, "\000" 
+    IDC_MRET_TYPE, 0x403, 4, 0
+0x6e69, 0x0074, 
+    IDC_MRET_TYPE, 0x403, 13, 0
+0x6e75, 0x6973, 0x6e67, 0x6465, 0x6920, 0x746e, "\000" 
+    IDC_MRET_TYPE, 0x403, 5, 0
+0x6863, 0x7261, "\000" 
+    IDC_MRET_TYPE, 0x403, 14, 0
+0x6e75, 0x6973, 0x6e67, 0x6465, 0x6320, 0x6168, 0x0072, 
+    IDC_MRET_TYPE, 0x403, 6, 0
+0x6873, 0x726f, 0x0074, 
+    IDC_MRET_TYPE, 0x403, 15, 0
+0x6e75, 0x6973, 0x6e67, 0x6465, 0x7320, 0x6f68, 0x7472, "\000" 
+    IDC_MRET_TYPE, 0x403, 5, 0
+0x6f6c, 0x676e, "\000" 
+    IDC_MRET_TYPE, 0x403, 14, 0
+0x6e75, 0x6973, 0x6e67, 0x6465, 0x6c20, 0x6e6f, 0x0067, 
+    IDC_MRET_TYPE, 0x403, 6, 0
+0x6c66, 0x616f, 0x0074, 
+    IDC_MRET_TYPE, 0x403, 7, 0
+0x6f64, 0x6275, 0x656c, "\000" 
+    IDC_MRET_TYPE, 0x403, 5, 0
+0x6f62, 0x6c6f, "\000" 
+    IDC_MRET_TYPE, 0x403, 7, 0
+0x5c8d, 0xa291, 0xcc91, "\000" 
+    IDC_MRET_TYPE, 0x403, 7, 0
+0xa48b, 0x4c97, 0xcc91, "\000" 
+    IDC_MRET_TYPE, 0x403, 7, 0
+0x4e83, 0x8983, 0x5883, "\000" 
+    IDC_MRET_POINTER, 0x403, 18, 0
+0xca92, 0xed8f, 0x9428, 0x83f1, 0x837c, 0x8343, 0x8393, 0x815e, 0x006a, 
+
+    IDC_MRET_POINTER, 0x403, 2, 0
+0x002a, 
+    IDC_MRET_POINTER, 0x403, 3, 0
+0x2a2a, "\000" 
+    IDC_MRET_POINTER, 0x403, 4, 0
+0x2a2a, 0x002a, 
+    IDC_MACCESSTYPE, 0x403, 7, 0
+0x7570, 0x6c62, 0x6369, "\000" 
+    IDC_MACCESSTYPE, 0x403, 8, 0
+0x7270, 0x7669, 0x7461, 0x0065, 
+    IDC_MACCESSTYPE, 0x403, 10, 0
+0x7270, 0x746f, 0x6365, 0x6574, 0x0064, 
+    IDC_MFUNCTYPE, 0x403, 5, 0
+0xca92, 0xed8f, "\000" 
+    IDC_MFUNCTYPE, 0x403, 9, 0
+0xbc89, 0x7a91, 0xd68a, 0x9490, "\000" 
+    IDC_MFUNCTYPE, 0x403, 13, 0
+0x838f, 0x8890, 0xbc89, 0x7a91, 0xd68a, 0x9490, "\000" 
+    IDC_MFUNCTYPE, 0x403, 9, 0
+0x7483, 0x8c83, 0x9383, 0x6883, "\000" 
+    0
+END
+
+IDD_CLS DLGINIT
+BEGIN
+    IDC_CLSTYPE, 0x403, 8, 0
+0xdeb8, 0xb0db, 0xdeca, 0x00d9, 
+    IDC_CLSTYPE, 0x403, 7, 0
+0x4e83, 0x8983, 0x5883, "\000" 
+    IDC_CLSTYPE, 0x403, 7, 0
+0x5c8d, 0xa291, 0xcc91, "\000" 
+    IDC_CLSTYPE, 0x403, 7, 0
+0xa48b, 0x4c97, 0xcc91, "\000" 
+    IDC_CLSTYPE, 0x403, 9, 0
+0xddb2, 0xb0c0, 0xaacc, 0xbdb0, "\000" 
+    IDC_ACCESSTYPE, 0x403, 7, 0
+0x7570, 0x6c62, 0x6369, "\000" 
+    IDC_ACCESSTYPE, 0x403, 8, 0
+0x7270, 0x7669, 0x7461, 0x0065, 
+    IDC_ACCESSTYPE, 0x403, 10, 0
+0x7270, 0x746f, 0x6365, 0x6574, 0x0064, 
+    0
+END
+
+IDD_OPTION DLGINIT
+BEGIN
+    IDC_VC_ENV, 0x403, 31, 0
+0xc28a, 0xab8b, 0xdd90, 0xe892, 0xaa82, 0xb382, 0xea82, 0xc482, 0xa282, 
+0xe982, 0x6956, 0x7573, 0x6c61, 0x4320, 0x2b2b, "\000" 
+    IDC_VC_ENV, 0x403, 34, 0
+0x6956, 0x7573, 0x6c61, 0x4320, 0x2b2b, 0x3220, 0x3130, 0x8135, 0x8369, 
+0x8366, 0x8374, 0x8348, 0x838b, 0x8367, 0x8370, 0x8158, 0x006a, 
+    IDC_VC_ENV, 0x403, 34, 0
+0x6956, 0x7573, 0x6c61, 0x4320, 0x2b2b, 0x3220, 0x3130, 0x8133, 0x8369, 
+0x8366, 0x8374, 0x8348, 0x838b, 0x8367, 0x8370, 0x8158, 0x006a, 
+    IDC_VC_ENV, 0x403, 34, 0
+0x6956, 0x7573, 0x6c61, 0x4320, 0x2b2b, 0x3220, 0x3130, 0x8132, 0x8369, 
+0x8366, 0x8374, 0x8348, 0x838b, 0x8367, 0x8370, 0x8158, 0x006a, 
+    IDC_VC_ENV, 0x403, 32, 0
+0x6956, 0x7573, 0x6c61, 0x4320, 0x2b2b, 0x3220, 0x3130, 0x2830, 0x6683, 
+0x7483, 0x4883, 0x8b83, 0x6783, 0x7083, 0x5883, 0x0029, 
+    IDC_VC_ENV, 0x403, 32, 0
+0x6956, 0x7573, 0x6c61, 0x4320, 0x2b2b, 0x3220, 0x3030, 0x2838, 0x6683, 
+0x7483, 0x4883, 0x8b83, 0x6783, 0x7083, 0x5883, 0x0029, 
+    IDC_VC_ENV, 0x403, 32, 0
+0x6956, 0x7573, 0x6c61, 0x4320, 0x2b2b, 0x3620, 0x302e, 0x8328, 0x8366, 
+0x8374, 0x8348, 0x838b, 0x8367, 0x8370, 0x8158, 0x006a, 
+    IDC_VC_ENV, 0x403, 15, 0
+0xe88e, 0xae93, 0xc582, 0x7083, 0x5883, 0xdd90, 0xe892, "\000" 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_OPTION AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_ABOUTBOX AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDP_OLE_INIT_FAILED     "OLE の初期化に失敗しました。OLE ライブラリのバージョンが正しいことを確認してください。"
+    CG_IDS_CANNOT_OPEN_CLIPBOARD "ｸﾘｯﾌﾟﾎﾞｰﾄﾞを開くのに失敗しました!"
+    CG_IDS_CANNOT_GET_CLIPBOARD_DATA "ｸﾘｯﾌﾟﾎﾞｰﾄﾞのﾃﾞｰﾀの取得に失敗しました!"
+    CG_IDS_CANNOT_OPEN_CLIPBOARD1 "ｸﾘｯﾌﾟﾎﾞｰﾄﾞを開くのに失敗しました!"
+    CG_IDS_CANNOT_GET_CLIPBOARD_DATA1 "ｸﾘｯﾌﾟﾎﾞｰﾄﾞのﾃﾞｰﾀの取得に失敗しました!"
+    IDS_MDL_PROPSHT_CAPTION "モジュールのプロパティ"
+    IDS_PAD_PROPSHT_CAPTION "PAD図形または矩形コメントのプロパティ"
+END
+
+STRINGTABLE
+BEGIN
+    IDR_MAINFRAME           "DP"
+    IDR_DPTYPE              "\nDP\nDP\nDP Files (*.dp)\n.dp\nDP.Document\nDP.Document"
+    ID_WINDOW_MANAGER       "ウィンドウ(&W)..."
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_APP_TITLE       "VE"
+    AFX_IDS_IDLEMESSAGE     "準備完了"
+END
+
+STRINGTABLE
+BEGIN
+    ID_INDICATOR_EXT        "EXT"
+    ID_INDICATOR_CAPS       "CAP"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "SCRL"
+    ID_INDICATOR_OVR        "OVR"
+    ID_INDICATOR_REC        "REC"
+END
+
+STRINGTABLE
+BEGIN
+    ID_FILE_NEW             "新規にファイルを作成\n新規ファイル"
+    ID_FILE_OPEN            "既存のファイルを開く\n開く"
+    ID_FILE_CLOSE           "作業中のファイルを閉じる\n閉じる"
+    ID_FILE_SAVE            "作業中のファイルを上書きして保存\n保存"
+    ID_FILE_SAVE_AS         "作業中のファイルを新しい名前で保存\n名前をつけて保存"
+END
+
+STRINGTABLE
+BEGIN
+    ID_APP_ABOUT            "プログラム情報、バージョン、著作権を表示します。\nバージョン情報"
+    ID_APP_EXIT             "アプリケーションを終了し、ファイルの保存を指示\n終了"
+END
+
+STRINGTABLE
+BEGIN
+    ID_FILE_MRU_FILE1       "指定のファイルを開く"
+    ID_FILE_MRU_FILE2       "指定のファイルを開く"
+    ID_FILE_MRU_FILE3       "指定のファイルを開く"
+    ID_FILE_MRU_FILE4       "指定のファイルを開く"
+    ID_FILE_MRU_FILE5       "指定のファイルを開く"
+    ID_FILE_MRU_FILE6       "指定のファイルを開く"
+    ID_FILE_MRU_FILE7       "指定のファイルを開く"
+    ID_FILE_MRU_FILE8       "指定のファイルを開く"
+    ID_FILE_MRU_FILE9       "指定のファイルを開く"
+    ID_FILE_MRU_FILE10      "指定のファイルを開く"
+    ID_FILE_MRU_FILE11      "指定のファイルを開く"
+    ID_FILE_MRU_FILE12      "指定のファイルを開く"
+    ID_FILE_MRU_FILE13      "指定のファイルを開く"
+    ID_FILE_MRU_FILE14      "指定のファイルを開く"
+    ID_FILE_MRU_FILE15      "指定のファイルを開く"
+    ID_FILE_MRU_FILE16      "指定のファイルを開く"
+END
+
+STRINGTABLE
+BEGIN
+    ID_NEXT_PANE            "次のウィンドウに切り替える\n次のペイン"
+    ID_PREV_PANE            "前のウィンドウに切り替える\n前のペイン"
+END
+
+STRINGTABLE
+BEGIN
+    ID_WINDOW_NEW           "作業中のドキュメントが表示された新しいウィンドウを表示\n新規ウィンドウ"
+    ID_WINDOW_ARRANGE       "ウィンドウの下部にアイコンを整列\nアイコンの整列"
+    ID_WINDOW_CASCADE       "ウィンドウを重ねて表示\n重ねて表示"
+    ID_WINDOW_TILE_HORZ     "ウィンドウを並べて表示\n並べて表示"
+    ID_WINDOW_TILE_VERT     "ウィンドウを並べて表示\n並べて表示"
+    ID_WINDOW_SPLIT         "作業中のウィンドウを分割\n分割"
+END
+
+STRINGTABLE
+BEGIN
+    ID_EDIT_CLEAR           "選択範囲を消去\n消去"
+    ID_EDIT_CLEAR_ALL       "すべて消去\nすべて消去"
+    ID_EDIT_COPY            "選択範囲をコピーしてクリップボードに保存\nコピー"
+    ID_EDIT_CUT             "選択範囲を切り取ってクリップボードに保存\n切り取り"
+    ID_EDIT_FIND            "指定した文字列の検索\n検索"
+    ID_EDIT_PASTE           "クリップボードの内容を貼り付け\n貼り付け"
+    ID_EDIT_REPEAT          "直前に行った動作を繰り返す\n繰り返し"
+    ID_EDIT_REPLACE         "指定した文字列を他の文字列で置換\n置換"
+    ID_EDIT_SELECT_ALL      "ファイル内のすべてを選択\nすべて選択"
+    ID_EDIT_UNDO            "直前に行った動作を元に戻す\n元に戻す"
+    ID_EDIT_REDO            "取り消した操作をやり直す\nやり直す"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_STATUS_BAR      "ステータス バーの表示/非表示\nステータス バーの表示切り替え"
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_SCSIZE          "ウィンドウのサイズを変更"
+    AFX_IDS_SCMOVE          "ウィンドウの位置を変更"
+    AFX_IDS_SCMINIMIZE      "ウィンドウを最小化する"
+    AFX_IDS_SCMAXIMIZE      "ウィンドウを最大化する"
+    AFX_IDS_SCNEXTWINDOW    "次のウィンドウに切り替える"
+    AFX_IDS_SCPREVWINDOW    "前のウィンドウに切り替える"
+    AFX_IDS_SCCLOSE         "作業中のウィンドウを閉じ、変更したファイルの保存を指示"
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_SCRESTORE       "ウィンドウを通常のサイズに戻す"
+    AFX_IDS_SCTASKLIST      "タスク一覧をアクティブにする"
+    AFX_IDS_MDICHILD        "ウィンドウをアクティブにする"
+END
+
+STRINGTABLE
+BEGIN
+    CG_IDS_CANNOT_OPEN_CLIPBOARD2 "ｸﾘｯﾌﾟﾎﾞｰﾄﾞを開くのに失敗しました!"
+    CG_IDS_CANNOT_GET_CLIPBOARD_DATA2 "ｸﾘｯﾌﾟﾎﾞｰﾄﾞのﾃﾞｰﾀの取得に失敗しました!"
+    IDS_STATUS_PANE1        "ペイン 1"
+    IDS_STATUS_PANE2        "ペイン 2"
+    IDS_TOOLBAR_STANDARD    "標準"
+    IDS_TOOLBAR_CUSTOMIZE   "カスタマイズ..."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_OUTPUT_WND          "出力"
+    IDS_PROPERTIES_WND      "プロパティ"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_BUILD_TAB           "ビルド"
+    IDS_DEBUG_TAB           "デバッグ"
+    IDS_FIND_TAB            "検索"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_EDIT_MENU           "編集"
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_PREVIEW_CLOSE   "印刷ﾌﾟﾚﾋﾞｭｰ ﾓｰﾄﾞの終わり\nﾌﾟﾚﾋﾞｭｰのｷｬﾝｾﾙ"
+END
+
+STRINGTABLE
+BEGIN
+    ID_PADPROPERTY          "PAD図形のプロパティを表示します\nPAD図形のプロパティ"
+    ID_PROPERTIES           "モジュールのプロパティを表示します\nモジュールのプロパティ"
+    ID_PROCESS              "連接のPAD図形を挿入します"
+    ID_SELECTION            "選択のPAD図形を挿入します"
+    ID_REPEAT               "反復のPAD図形を挿入します"
+    ID_COMMENT              "コメントを挿入します"
+    ID_EDIT_DELETE          "削除します\n削除"
+    IDC_TEST                "モジュールを単体テストするウインドウを開きます\n単体テスト"
+END
+
+STRINGTABLE
+BEGIN
+    ID_COMPILE              "コンパイルする"
+    ID_BUILD_BUILD          "ビルドします\nビルド"
+    ID_BUILD_COMPILE        "リンクせずコンパイルします\nコンパイルします"
+    ID_BUILD_EXEC           "モジュールを実行します\n実行"
+END
+
+STRINGTABLE
+BEGIN
+    ID_EXEC                 "モジュールを実行します\n実行"
+    ID_EDIT_DELETE_M        "モジュールを削除します\n削除"
+    ID_EDIT_DELETE_P        "PADを削除します\n削除"
+    ID_INSERT_MODULE        "モジュールを挿入します\nモジュールの挿入"
+    ID_MENUITEM32793        "自動整形\n自動で整形する"
+    ID_VIEW_ADJUST          "ＰＡＤ図を整形する\nＰＡＤ図整形"
+END
+
+STRINGTABLE
+BEGIN
+    ID_FILE_SOURCE          "プログラミング言語のソース・コードを指定したファイル名で出力する\nプログラミング言語のソースを出力"
+    ID_INSERT_M             "モジュール・ツリーにモジュールを挿入します\nモジュールの挿入"
+    ID_TOOL_OPTION          "各種設定をします\n各種設定"
+    ID_INSERTPADF           "PAD図形を挿入します\nPAD図形の挿入"
+    ID_SAVE_SOURCE_FILE     "ソース･コードを出力します\nソース･コードの出力"
+    ID_INSERT_VAR           "変数を挿入します\n変数の挿入"
+    ID_LINE                 "モジュール間の呼び出し線を引く\nモジュール間の線を引く"
+    ID_INSERT_IF            "選択(if)を挿入します\n選択(if)の挿入"
+END
+
+STRINGTABLE
+BEGIN
+    ID_INSERT_SWITCH        "選択(switch)を挿入します\n選択(switch)の挿入"
+    ID_INSERT_FOR           "反復(for)を挿入します\n反復(for)の挿入"
+    ID_INSERT_WHILE         "反復(while)を挿入します\n反復(while)の挿入"
+    ID_INSERT_DO_WHILE      "反復(do～while)を挿入します\n反復(do～while)の挿入"
+    ID_INSERT_PROCESS       "処理を挿入します\n処理を挿入"
+    ID_INSERT_COMMENT       "矩形コメントを挿入します\n矩形コメントの挿入"
+END
+
+#endif    // 日本語 (日本) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+LANGUAGE 17, 1
+#include "res\VE.rc2"  // Microsoft Visual C++ 以外で編集されたリソース
+#include "l.JPN\afxres.rc"      // 標準コンポーネント
+#if !defined(_AFXDLL)
+#include "l.JPN\afxprint.rc"        // 印刷/印刷プレビュー リソース
+#include "l.JPN\afxribbon.rc"        // MFC リボンおよびコントロール バー リソース
+#endif
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
