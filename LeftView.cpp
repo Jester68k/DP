@@ -4,6 +4,8 @@
 #include "stdafx.h"
 #include "VE.h"
 
+#include "Padf.h"
+#include "VLine.h"
 #include "LeftView.h"
 #include "VEDoc.h"
 #include "Class.h"
@@ -387,12 +389,13 @@ void CLeftView::DoCutCopyPaste(CArchive &ar, BOOL bCut)
 	CClass* pCls;
 	CModule* pMdl;
 	CPadf* pPadf;
+	CVLine* pVl;
 	POSITION cPos, lpos;
 	// TODO: 選択されているデータを CArchive オブジェクト経由でクリップードへまたは
 	//       クリップボードからコピーするコードを追加してください。メモ: 
 	//       ar.IsStoring() が TRUE の場合は、コピーまたは切り取り操作を意味します。
 	i=pDoc->am;
-	if(ar.IsStoring()==TRUE) {
+	if(ar.IsStoring()) {
 		if(i==-1)
 			return;
 		ar << (DWORD)0;
@@ -406,18 +409,15 @@ void CLeftView::DoCutCopyPaste(CArchive &ar, BOOL bCut)
 		ar << (USHORT)(pMdl->rect.right-pMdl->rect.left);
 		ar << (USHORT)(pMdl->rect.bottom-pMdl->rect.top);
 		ar << (USHORT)pMdl->recursive;
-		ar << (USHORT)pMdl->padf.GetCount();
+		pVl = &pMdl->vline;
+		ar << pVl;
 		ar << pMdl->line.GetSize();
 		for(j=0; j<pMdl->line.GetSize(); j++)
 			ar << pMdl->line[j];
-		lpos = pMdl->padf.GetHeadPosition();
-		while(lpos) {
-			pPadf = (CPadf*)pMdl->padf.GetNext(lpos);
-			ar << pPadf;
-		}
-	} else {
+	}
+	else {
 		ar >> (DWORD&)doc_type;
-		if (doc_type!=0)
+		if (doc_type != 0)
 			return;
 		pMdl = new CModule();
 		ar >> (CString&)pMdl->name;
@@ -425,22 +425,30 @@ void CLeftView::DoCutCopyPaste(CArchive &ar, BOOL bCut)
 		ar >> (WORD&)pMdl->ret_type;
 		ar >> (USHORT&)width;
 		ar >> (USHORT&)height;
-		pMdl->rect.left=sx;
-		pMdl->rect.top=sy;
-		pMdl->rect.right=sx+width-1;
-		pMdl->rect.bottom=sy+height-1;
+		pMdl->rect.left = sx;
+		pMdl->rect.top = sy;
+		pMdl->rect.right = sx + width - 1;
+		pMdl->rect.bottom = sy + height - 1;
 		ar >> (USHORT&)num_padfs;
 		ar >> (USHORT&)pMdl->recursive;
+		ar >> pVl;
+		pMdl->vline.x = pVl->x;
+		pMdl->vline.sy = pVl->sy;
+		pMdl->vline.ey = pVl->ey;
+		pMdl->vline.hline_y = pVl->hline_y;
+		num_padfs = pVl->padf_list.GetCount();
+		if (num_padfs>0) {
+			while (--num_padfs >= 0) {
+				ar >> pPadf;
+				pMdl->vline.padf_list.AddTail((CObject*)pPadf);
+			}
+		}
 		ar >> (DWORD&)size;
 		pMdl->line.SetSize(size);
 		for(j=0; j<size; j++)
 			ar >> pMdl->line[j];
 		if(pDoc->am!=-1)
 			pMdl->line.Add(i);
-		for(j=0; num_padfs; j++) {
-			ar >> pPadf;
-			pMdl->padf.AddTail((CObject*) pPadf);
-		}
 	}
 //	GetDocument()->Serialize(ar);
 
@@ -492,7 +500,7 @@ void CLeftView::OnLButtonDown(UINT nFlags, CPoint point)
 				pMdl->rect.right += move_x;
 				pMdl->rect.bottom += move_y;
 				pDoc->am=i;
-				pDoc->ap=-1;
+				pDoc->pAPadf = NULL;
 				InvalidateRect(NULL);
 				pDoc->UpdateAllViews(this);
 				GetDocument()->SetModifiedFlag();
@@ -501,7 +509,7 @@ void CLeftView::OnLButtonDown(UINT nFlags, CPoint point)
 			case 1:
 				line_mode=2;
 				pDoc->am=i;
-				pDoc->ap=-1;
+				pDoc->pAPadf = NULL;
 				InvalidateRect(NULL);
 				pDoc->UpdateAllViews(this);
 				return;
@@ -588,6 +596,7 @@ void CLeftView::OnProperties()
 	CModulePropertySheet propSheet;
 	CClass* pCls;
 	CModule* pMdl;
+	int num_padfs;
 
 	if (-1==pDoc->am)
 		return;
@@ -601,7 +610,8 @@ void CLeftView::OnProperties()
 	propSheet.m_Page1.m_mret_pointer=pMdl->ret_pointer;
 	propSheet.m_Page1.m_accesstype = pMdl->access_type;
 	propSheet.m_Page1.m_mcomment=pMdl->comment;
-	propSheet.m_Page1.m_mnumpadfs=pMdl->padf.GetCount();
+	num_padfs = pMdl->vline.padf_list.GetCount();
+	propSheet.m_Page1.m_mnumpadfs = num_padfs;
 	propSheet.m_Page1.m_mnum_vars=pMdl->var.GetCount();
 	propSheet.m_Page1.m_mrecursive=pMdl->recursive;
 	propSheet.m_Page1.m_minline=pMdl->inline_flag;
@@ -911,7 +921,7 @@ void CLeftView::OnMouseMove(UINT nFlags, CPoint point)
 			for(int i=0; i<pm->ret_pointer; i++)
 				m_toolTip_text+=_T("*");
 			m_toolTip_text += _T(" ") + pm->name + _T("(") + pm->arg + _T(") \r\n") + pm->comment + _T("\r\nＰＡＤ図形と矩形コメント：");
-			str.Format(_T("%d\r\nローカル変数：%d"), pm->padf.GetCount(), pm->var.GetCount());
+			str.Format(_T("%d\r\nローカル変数：%d"), pm->total_padfs, pm->var.GetCount());
 			m_toolTip_text += str;
 		    m_toolTip.Update();
 			return;

@@ -10,6 +10,7 @@
 #endif // _MSC_VER > 1000
 
 #include "Padf.h"
+#include "VLine.h"
 #include "Module.h"
 
 class CVEDoc : public CDocument
@@ -20,7 +21,8 @@ class CVEDoc : public CDocument
 	friend class CVEView;
 
 protected:
-	LONG ac, am, ap;	// active class(0 is global), active module, active PAD number
+	LONG ac, am;	// active class(0 is global), active module, active PAD number
+	CPadf* pAPadf;
 	CObList cls;
 	CStdioFile f;
 	CString path;
@@ -49,8 +51,6 @@ public:
 public:
 	virtual ~CVEDoc();
 protected:
-	CPadf* GetPadf(CModule* pMdl, int pad);
-	int GetNextPadfNum(CModule* pMdl, int p, int p_pos=0);
 	void WriteLines(CModule* pMdl, int p, int indent);
 	void WriteIndent(int tab);
 	BOOL SaveSourceFile();

@@ -5,8 +5,8 @@
 #include "stdafx.h"
 #include "VE.h"
 #include "Var.h"
+#include "VLine.h"
 #include "Padf.h"
-//#include "VLine.h"
 #include "Module.h"
 
 #ifdef _DEBUG
@@ -19,8 +19,11 @@ static char THIS_FILE[]=__FILE__;
 // \’z/Á–Å
 //////////////////////////////////////////////////////////////////////
 
+IMPLEMENT_SERIAL(CModule, CObject, 0)
+
 CModule::CModule()
 {
+	total_padfs = 0;
 }
 
 CModule::~CModule()
@@ -36,25 +39,17 @@ CModule::~CModule()
 	}
 	if(line.GetSize()>0)
 		line.RemoveAll();
-	if(padf.GetCount()>0) {
-		pos = padf.GetHeadPosition();
-		while(pos) {
-			delete (CPadf*)(padf.GetNext(pos));
-		}
-		padf.RemoveAll();
-	}
 }
 
 // CModule serialize
 
-IMPLEMENT_SERIAL(CModule, CObject, 0)
-
 void CModule::Serialize(CArchive& ar)
 {
-	int l, v, p;
+	int l, v;
 	WORD lsize, num_vars, num_padfs;
 	CVar* pVar;
 	CPadf* pPadf;
+	CVLine* pVl;
 	POSITION pos;
 
 	if (ar.IsStoring()) {
@@ -69,6 +64,7 @@ void CModule::Serialize(CArchive& ar)
 		ar << (BOOL)recursive;
 		ar << (BOOL)inline_flag;
 		ar << (WORD)func_type;
+		ar << (WORD)total_padfs;
 		lsize = line.GetSize();
 		ar << (WORD)lsize;
 		if(lsize>0) {
@@ -77,20 +73,13 @@ void CModule::Serialize(CArchive& ar)
 		}
 		ar << (WORD)var.GetCount();
 		if(var.GetCount()) {
-			pos= var.GetHeadPosition();
+			pos = var.GetHeadPosition();
 			while(pos) {
 				pVar= (CVar*)var.GetNext(pos);
 				ar << pVar;
 			}
 		}
-		ar << (WORD)padf.GetCount();
-		if(padf.GetCount()) {
-			pos=padf.GetHeadPosition();
-			while(pos) {
-				pPadf = (CPadf*)padf.GetNext(pos);
-				ar << pPadf;
-			}
-		}
+		ar << &vline;
 	} else {
 		ar >> name;
 		ar >> arg;
@@ -103,6 +92,7 @@ void CModule::Serialize(CArchive& ar)
 		ar >> (BOOL&)recursive;
 		ar >> (BOOL&)inline_flag;
 		ar >> (WORD&)func_type;
+		ar >> (WORD&)total_padfs;
 		ar >> (WORD&)lsize;
 		if(lsize>0) {
 			line.SetSize(lsize,1);
@@ -116,11 +106,20 @@ void CModule::Serialize(CArchive& ar)
 				ar >> pVar;
 				var.AddTail((CObject*)pVar);
 			}
-		ar >> (WORD&)num_padfs;
-		if(num_padfs>0)
-			for(p=0; p<num_padfs; p++) {
-				ar >> pPadf;
-				padf.AddTail((CObject*)pPadf);
+		ar >> pVl;
+
+		vline.hline_y = pVl->hline_y;	// Horizontal line position Y
+		vline.case_str = pVl->case_str;	// case string
+		vline.x=pVl->x;					// Vertical Line position X
+		vline.sy=pVl->sy;				//                        start Y
+		vline.ey=pVl->ey;				//                        end   Y
+		num_padfs = pVl->padf_list.GetCount();
+		if (num_padfs) {
+			pos = pVl->padf_list.GetHeadPosition();
+			while (pos) {
+				pPadf = (CPadf*)pVl->padf_list.GetNext(pos);
+				vline.padf_list.AddTail((CObject*)pPadf);
 			}
+		}
 	}
 }

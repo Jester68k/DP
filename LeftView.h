@@ -13,7 +13,7 @@ class CVEDoc;
 
 class CLeftView : public CScrollView
 {
-friend class CPad;
+friend class CPadf;
 public:
 	int i, j, k, sx, sy, ex, ey, width, height;
 	CPoint pos;

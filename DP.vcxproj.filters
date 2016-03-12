@@ -15,155 +15,193 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dp\dp\ChildFrm.cpp">
+    <ClCompile Include="ChildFrm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dp\dp\Class.cpp">
+    <ClCompile Include="Class.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dp\dp\ClassDlg.cpp">
+    <ClCompile Include="ClassDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dp\dp\ClassView.cpp">
+    <ClCompile Include="ClassView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dp\dp\LeftView.cpp">
+    <ClCompile Include="LeftView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dp\dp\MainFrm.cpp">
+    <ClCompile Include="MainFrm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dp\dp\Module.cpp">
+    <ClCompile Include="Module.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dp\dp\ModulePropertyPage1.cpp">
+    <ClCompile Include="ModulePropertyPage1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dp\dp\ModulePropertySheet.cpp">
+    <ClCompile Include="ModulePropertySheet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dp\dp\OptionDlg.cpp">
+    <ClCompile Include="OptionDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dp\dp\OutputWnd.cpp">
+    <ClCompile Include="OutputWnd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dp\dp\Padf.cpp">
+    <ClCompile Include="Padf.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dp\dp\PadfPropertyPage1.cpp">
+    <ClCompile Include="PadfPropertyPage1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dp\dp\PadfPropertySheet.cpp">
+    <ClCompile Include="PadfPropertySheet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dp\dp\PropertiesWnd.cpp">
+    <ClCompile Include="PropertiesWnd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dp\dp\stdafx.cpp">
+    <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dp\dp\Var.cpp">
+    <ClCompile Include="Var.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dp\dp\VarDlg.cpp">
+    <ClCompile Include="VarDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dp\dp\VarView.cpp">
+    <ClCompile Include="VarView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dp\dp\VE.cpp">
+    <ClCompile Include="VE.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dp\dp\VEDoc.cpp">
+    <ClCompile Include="VEDoc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dp\dp\VEView.cpp">
+    <ClCompile Include="VEView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VLine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="dp\dp\ChildFrm.h">
+    <ClInclude Include="ChildFrm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dp\dp\Class.h">
+    <ClInclude Include="Class.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dp\dp\ClassDlg.h">
+    <ClInclude Include="ClassDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dp\dp\ClassView.h">
+    <ClInclude Include="ClassView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dp\dp\LeftView.h">
+    <ClInclude Include="LeftView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dp\dp\MainFrm.h">
+    <ClInclude Include="MainFrm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dp\dp\Module.h">
+    <ClInclude Include="Module.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dp\dp\ModulePropertyPage1.h">
+    <ClInclude Include="ModulePropertyPage1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dp\dp\ModulePropertySheet.h">
+    <ClInclude Include="ModulePropertySheet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dp\dp\OptionDlg.h">
+    <ClInclude Include="OptionDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dp\dp\OutputWnd.h">
+    <ClInclude Include="OutputWnd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dp\dp\Padf.h">
+    <ClInclude Include="Padf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dp\dp\PadfPropertyPage1.h">
+    <ClInclude Include="PadfPropertyPage1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dp\dp\PadfPropertySheet.h">
+    <ClInclude Include="PadfPropertySheet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dp\dp\PropertiesWnd.h">
+    <ClInclude Include="PropertiesWnd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dp\dp\Resource.h">
+    <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dp\dp\stdafx.h">
+    <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dp\dp\targetver.h">
+    <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dp\dp\Var.h">
+    <ClInclude Include="Var.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dp\dp\VarDlg.h">
+    <ClInclude Include="VarDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dp\dp\VarView.h">
+    <ClInclude Include="VarView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dp\dp\VE.h">
+    <ClInclude Include="VE.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dp\dp\VEDoc.h">
+    <ClInclude Include="VEDoc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dp\dp\VEView.h">
+    <ClInclude Include="VEView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VLine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="dp\dp\VE.rc">
+    <ResourceCompile Include="VE.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="dp\dp\res\VE.rc2">
+    <None Include="res\VE.rc2">
       <Filter>Resource Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\VE.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\VEDoc.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\output_wnd.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\output_wnd_hc.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\properties_wnd.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\properties_wnd_hc.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Toolbar256.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\properties.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\properties_hc.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Toolbar.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

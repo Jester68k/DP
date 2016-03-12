@@ -231,7 +231,7 @@ void CClassView::OnInsertCls()
 		pCls = new CClass();
 		pCls->SetValue(clsdlg.m_type, clsdlg.m_name, clsdlg.m_accesstype, clsdlg.m_baseclass, clsdlg.m_friendclass);
 		pDoc->am = -1;
-		pDoc->ap = -1;
+		pDoc->pAPadf = NULL;
 		for(num=0; num<pDoc->cls.GetCount(); num++) {
 			pSearchCls=(CClass*)(pDoc->cls.GetAt(pDoc->cls.FindIndex(num)));
 			if(clsdlg.m_type < pSearchCls->type) {
@@ -464,7 +464,7 @@ void CClassView::OnEditDelete()
 				pDoc->cls.RemoveAt(pos);
 				pDoc->ac=0;
 				pDoc->am=-1;
-				pDoc->ap=-1;
+				pDoc->pAPadf = NULL;
 				InvalidateRect(NULL,FALSE);
 				pDoc->UpdateAllViews(NULL);
 				SetListItems();

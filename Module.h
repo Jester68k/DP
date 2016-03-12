@@ -1,4 +1,8 @@
+#include "VLine.h"
+
 class CModule : public CObject {
+	friend class CPadf;
+	friend class CVLine;
 	friend class CVEDoc;
 	friend class CLeftView;
 	friend class CVarView;
@@ -17,12 +21,13 @@ private:
 	BOOL recursive;
 	BOOL inline_flag;
 	WORD func_type;
+	WORD total_padfs;
 	CWordArray line;
 	CObList var;
-	CObList padf;
-//	CVLine vl;
+	CVLine vline;
+	CObList comment_list;
 public:
 	CModule();
 	~CModule();
-	virtual void Serialize(CArchive& ar);
+	void Serialize(CArchive& ar);
 };

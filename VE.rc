@@ -424,7 +424,7 @@ CAPTION "誰でもプログラマのバージョン情報"
 FONT 9, "ＭＳ Ｐゴシック", 0, 0, 0x0
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,11,10,20,20
-    LTEXT           "誰でもプログラマ Version 0.5.0.0",IDC_STATIC,40,10,100,8,SS_NOPREFIX
+    LTEXT           "誰でもプログラマ Version 0.5.1.0",IDC_STATIC,40,10,100,8,SS_NOPREFIX
     DEFPUSHBUTTON   "OK",IDOK,146,6,50,14,WS_GROUP
     LTEXT           "Copycenter Jester 2009-2015",IDC_STATIC,41,23,88,8
 END
@@ -549,8 +549,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,5,0,0
- PRODUCTVERSION 0,5,0,0
+ FILEVERSION 0,5,1,0
+ PRODUCTVERSION 0,5,1,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -566,12 +566,12 @@ BEGIN
         BLOCK "041104b0"
         BEGIN
             VALUE "FileDescription", "VE MFC ｱﾌﾟﾘｹｰｼｮﾝ"
-            VALUE "FileVersion", "0.5.0.0"
+            VALUE "FileVersion", "0.5.1.0"
             VALUE "InternalName", "VPE"
             VALUE "LegalCopyright", "None(Copyleft)"
             VALUE "OriginalFilename", "VE.EXE"
             VALUE "ProductName", "VE ｱﾌﾟﾘｹｰｼｮﾝ"
-            VALUE "ProductVersion", "0.5.0.0"
+            VALUE "ProductVersion", "0.5.1.0"
         END
     END
     BLOCK "VarFileInfo"

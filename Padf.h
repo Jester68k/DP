@@ -1,4 +1,7 @@
+#pragma once
+
 class CPadf : public CObject {
+	friend class CVLine;
 	friend class CModule;
 	friend class CVEDoc;
 	friend class CVEView;
@@ -6,21 +9,18 @@ class CPadf : public CObject {
 	DECLARE_SERIAL(CPadf)
 
 private:
-	WORD type;		//　ＰＡＤの種類またはコメント
-	WORD type2;		//　選択の場合の２番目のタイプ
-	CRect rect;		//　ＰＡＤの左上と右下の座標
-	CString str;	//　ＰＡＤの中身の文字列
-	WORD case_y;	//　caseのＹ座標
-	CString case_str;//　選択のswitchの時のcaseの文字列
-	INT prev_p;		//　一つ前につながっているＰＡＤの番号(-1なら前は無し)
-	WORD prev_p_pos;//　一つ前につながっているＰＡＤの接続位置
-	WORD num_branch;//　switchでの分岐数
-	CString comment;// このＰＡＤ図形についてのコメント
-//	CObArray vla;
-
+	WORD type;			//　ＰＡＤの種類またはコメント
+	WORD type2;			//　ＰＡＤの第２属性
+	CRect rect;			//　ＰＡＤの開始位置と終了位置
+	CString str;		//　ＰＡＤの中身の文字列
+	WORD num_branch;	//　switchでの分岐数
+	CString comment;	// このＰＡＤ図形についてのコメント
+	CObList vl_list;
 public:
 	CPadf();
 	~CPadf();
 	virtual void Serialize(CArchive& ar);
+	void Draw(CDC* pDC);
+	BOOL HitTest(int x, int y);
 };
 

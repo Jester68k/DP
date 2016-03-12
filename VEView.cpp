@@ -4,6 +4,8 @@
 #include "stdafx.h"
 #include "VE.h"
 
+#include "Padf.h"
+#include "VLine.h"
 #include "Class.h"
 #include "VEDoc.h"
 #include "VEView.h"
@@ -94,182 +96,69 @@ void CVEView::OnDraw(CDC* pDC)
 	CPoint pos = GetScrollPosition();
 	CRect rect;
 	CRectTracker rt;
-	int i, j, sx, sy, ex, ey, xsize, ysize, am, next_y;
+	int am;
 	CClass* pCls;
 	CModule* pm;
-	CPadf *pPadf, *pPrevPadf, *pNextPadf;
+	CPadf *pPadf;
 	CString str;
-	POSITION lpos;
+	POSITION lpos;	// list position 1, 2
 
 	// TODO: この場所にネイティブ データ用の描画コードを追加します。
-	if(pDoc->ac < 0 || pDoc->ac>=pDoc->cls.GetCount())
+	if (pDoc->ac < 0 || pDoc->ac >= pDoc->cls.GetCount())
 		return;
-	pCls=(CClass*)pDoc->cls.GetAt(pDoc->cls.FindIndex(pDoc->ac));
-	if(!pCls->mdl.GetCount())
+	pCls = (CClass*)pDoc->cls.GetAt(pDoc->cls.FindIndex(pDoc->ac));
+	if (!pCls->mdl.GetCount())
 		return;
-	if (pDoc->am==-1) {
-		return;
-	}
-	pm=(CModule*)(pCls->mdl.GetAt(pCls->mdl.FindIndex(pDoc->am)));
-	if (pm->padf.GetCount()>MAX_PADFS) {
-		AfxMessageBox("ＰＡＤ図形の数が最大数を超えています。",MB_OK);
+	if (pDoc->am == -1) {
 		return;
 	}
-	TRACE("padf: %d ", pm->padf.GetCount());
-	if(pm->padf.GetCount()<=0)
+	pm = (CModule*)(pCls->mdl.GetAt(pCls->mdl.FindIndex(pDoc->am)));
+	if (pm->total_padfs > MAX_PADFS) {
+		AfxMessageBox("ＰＡＤ図形の数が最大数を超えています。", MB_OK);
+		return;
+	}
+	TRACE("class: %d module: %d total padfs: %d \n", pDoc->ac, pDoc->am, pm->total_padfs);
+	if (pm->total_padfs <= 0)
 		return;
 
-	am=pDoc->am;
+	am = pDoc->am;
 	width = 0;
-	height =0;
-	lpos=pm->padf.GetHeadPosition();
-	while(lpos) {
-		pPadf=(CPadf*)pm->padf.GetNext(lpos);
-		if (pPadf->type>=PADF_PROCESS && pPadf->type<=PADF_COMMENT) {
-			if (width < pPadf->rect.right+10)
-					width=pPadf->rect.right+10;
-			if (height < pPadf->rect.bottom+10)
-					height=pPadf->rect.bottom+10;
+	height = 0;
+	lpos = pm->vline.padf_list.GetHeadPosition();
+	while (lpos) {
+		pPadf = (CPadf*)pm->vline.padf_list.GetNext(lpos);
+		if (pPadf->type >= PADF_PROCESS && pPadf->type <= PADF_COMMENT) {
+			if (width < pPadf->rect.right + 10)
+				width = pPadf->rect.right + 10;
+			if (height < pPadf->rect.bottom + 10)
+				height = pPadf->rect.bottom + 10;
 		}
-		TRACE("type %d:%d, %d %d %d %d ", pPadf->type, pPadf->type2, pPadf->rect.left, pPadf->rect.top, pPadf->rect.right, pPadf->rect.bottom);
+		TRACE("type %d:%d, (%d,%d)-(%d,%d) %s : %s\n", pPadf->type, pPadf->type2, pPadf->rect.left, pPadf->rect.top, pPadf->rect.right, pPadf->rect.bottom, pPadf->str, pPadf->comment);
 	}
 	CSize sizeTotal;
 	// このビューのサイズの合計を計算します。
 	sizeTotal.cx = width;
 	sizeTotal.cy = height;
 	SetScrollSizes(MM_TEXT, sizeTotal);
-	
-	myPen.CreatePen(PS_SOLID, 1, RGB(0,0,0));
 
+	rect.top = pm->vline.sy;
+	rect.bottom = pm->vline.ey;
+	rect.left = pm->vline.x;
+	rect.right = pm->vline.x;
+	pm->vline.Draw(pDC, rect);
+
+	myPen.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
 	pOldPen = pDC->SelectObject(&myPen);
-	i=0;
-	lpos=pm->padf.GetHeadPosition();
-	while(lpos) {
-		pPadf=(CPadf*)pm->padf.GetNext(lpos);
-		if (pPadf->type>=PADF_PROCESS && pPadf->type<=PADF_COMMENT) {
-			rt.m_rect.left = pPadf->rect.left-pos.x;
-			rt.m_rect.top = pPadf->rect.top-pos.y;
-			rt.m_rect.right = pPadf->rect.right-pos.x;
-			rt.m_rect.bottom = pPadf->rect.bottom-pos.y;
-			if (i==pDoc->ap)	// アクティブなＰＡＤ図形なら描画スタイルを内部リサイズに指定する
-				rt.m_nStyle = CRectTracker::resizeInside;
-			else
-				rt.m_nStyle = 0;
-			if(pPadf->type==PADF_COMMENT)
-				pDC->DrawText(pPadf->str, pPadf->rect, DT_LEFT | DT_WORDBREAK);
-			else {
-				str.Format(padf_msg[pPadf->type][pPadf->type2],pPadf->str);
-				str.Replace("&","&&");
-				pDC->DrawText(str, pPadf->rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
-			}
-			rt.Draw(pDC);
-			sx = pPadf->rect.left;
-			sy = pPadf->rect.top;
-			ex = pPadf->rect.right;
-			ey = pPadf->rect.bottom;
-			xsize = ex - sx + 1;
-			ysize = ey - sy + 1;
-			if (pPadf->type>=PADF_PROCESS && pPadf->type<=PADF_REPEAT) {
-				pDC->MoveTo(ex, sy);
-				pDC->LineTo(sx, sy);
-				pDC->LineTo(sx, ey);
-				pDC->LineTo(ex, ey);
-			}
-			switch (pPadf->type) {
-			case PADF_PROCESS:
-				pDC->MoveTo(ex, sy);
-				pDC->LineTo(ex, ey);
-				break;
-			case PADF_SELECTION:
-				pDC->MoveTo(ex, sy);
-				if (pPadf->num_branch<=2) {
-					pDC->LineTo(ex-10, sy+ysize/2);
-					pDC->LineTo(ex, ey);
-				} else {
-					for(next_y=sy, j=2; j<=pPadf->num_branch; j++) {
-						if(pDoc->GetNextPadfNum(pm,i,j)==-1)
-							AfxMessageBox("内部エラーです",MB_OK);
-						else {
-							pNextPadf=pDoc->GetPadf(pm, pDoc->GetNextPadfNum(pm,i,j));
-							pDC->LineTo(ex-10, (next_y+pNextPadf->case_y)/2);
-							if(j<pPadf->num_branch)
-								pDC->LineTo(ex, next_y=pNextPadf->case_y);
-							else
-								pDC->LineTo(ex, ey);
-						}
-					}
-				}
-				break;
-			case PADF_REPEAT:
-				pDC->MoveTo(ex, sy);
-				pDC->LineTo(ex, ey);
-				if(pPadf->type2 != 2) {
-					pDC->MoveTo(sx+10, sy);
-					pDC->LineTo(sx+10, ey);
-				} else {
-					pDC->MoveTo(ex-10, sy);
-					pDC->LineTo(ex-10, ey);
-				}
-				break;
-			default:
-				break;
-			}
-			// draw line
-			prev_p = pPadf->prev_p;
-			if (prev_p!=-1) {
-				prev_p_pos = pPadf->prev_p_pos;
-				pPrevPadf=pDoc->GetPadf(pm, prev_p);
-				rect = pPrevPadf->rect;
-				switch (prev_p_pos) {
-				case -1: // 反復の右側の横線
-					pDC->MoveTo(rect.right, (rect.top+rect.bottom)/2 );
-					pDC->LineTo(sx, (sy+ey)/2);
-					break;
-				case 0: // 縦線（ひとつ上のＰＡＤ図形との線）
-					pDC->MoveTo(rect.left, rect.bottom );
-					pDC->LineTo(sx, sy);
-					break;
-				case 1: // 選択の横線(一番上)
-					pDC->MoveTo(rect.right, rect.top );
-					pDC->LineTo(sx, rect.top);
-					if(pPrevPadf->type2==1) // switchならば
-						pDC->TextOut(rect.right, rect.top-20, pPadf->case_str);
-					break;
-				case 2: // ２番目の横線
-					switch(pPrevPadf->type2) {
-					case 0: // if
-						pDC->MoveTo(rect.right, rect.bottom );
-						pDC->LineTo(sx, rect.bottom);
-						pDC->TextOut(rect.right, rect.bottom-20, pPadf->case_str);
-						break;
-					case 1: // switch
-						if(prev_p_pos==pPrevPadf->num_branch) {	// 一番下の横線
-							pDC->MoveTo(rect.right, rect.bottom );
-							pDC->LineTo(pPadf->rect.left, rect.bottom );
-							pDC->TextOut(rect.right, rect.bottom-20, pPadf->case_str);
-						} else {	// 中の横線
-							pDC->MoveTo(rect.right, pPadf->case_y );
-							pDC->LineTo(pPadf->rect.left, pPadf->case_y);
-							pDC->TextOut(rect.right, pPadf->case_y-20, pPadf->case_str);
-						}
-						break;
-					}
-					break;
-				default: // 選択の横線（中や一番下の線）
-					if(prev_p_pos==pPrevPadf->num_branch) {	// 一番下の横線
-						pDC->MoveTo(pPrevPadf->rect.right, pPrevPadf->rect.bottom );
-						pDC->LineTo(pPadf->rect.left, pPrevPadf->rect.bottom);
-						pDC->TextOut(pPrevPadf->rect.right, pPrevPadf->rect.bottom-20, pPadf->case_str);
-					} else {	// 中の横線
-						pDC->MoveTo(pPrevPadf->rect.right, pPadf->case_y );
-						pDC->LineTo(pPadf->rect.left, pPadf->case_y);
-						pDC->TextOut(pPrevPadf->rect.right, pPadf->case_y-20, pPadf->case_str);
-					}
-					break;
-				}
-			}
-		}
-		i++;
+
+	lpos = pm->vline.padf_list.GetHeadPosition();
+	while (lpos) {
+		pPadf = (CPadf*)pm->vline.padf_list.GetNext(lpos);
+		if (pPadf == pDoc->pAPadf)	// アクティブなＰＡＤ図形なら描画スタイルを内部リサイズに指定する
+			rt.m_nStyle = CRectTracker::resizeInside;
+		else
+			rt.m_nStyle = 0;
+		rt.m_rect = pPadf->rect;
+		rt.Draw(pDC);
 	}
 	pDC->SelectObject(pOldPen);
 	myPen.DeleteObject();
@@ -342,7 +231,7 @@ void CVEView::OnContextMenu(CWnd*, CPoint point)
 	CClass* pCls;
 	CModule* pMdl;
 	CPadf* pPadf;
-	int i;
+	POSITION lpos;
 
 	pCls=(CClass*)pDoc->cls.GetAt(pDoc->cls.FindIndex(pDoc->ac));
 	if(-1==pDoc->am)
@@ -353,20 +242,21 @@ void CVEView::OnContextMenu(CWnd*, CPoint point)
 	sx=client_point.x;
 	sy=client_point.y;
 	pMdl=(CModule*)pCls->mdl.GetAt(pCls->mdl.FindIndex(pDoc->am));
-	if (pDoc->am!=-1)
-		for(i=0; i<pMdl->padf.GetCount(); i++) {
-			pPadf=pDoc->GetPadf(pMdl, i);
-			rt.m_rect = pPadf->rect;
-			rt.m_rect.left -= pos.x;
-			rt.m_rect.top -= pos.y;
-			rt.m_rect.right -= pos.x;
-			rt.m_rect.bottom -= pos.y;
-			if (pPadf->type>=PADF_PROCESS && rt.HitTest(client_point)>=0) {
-				pDoc->ap=i;
-				InvalidateRect(NULL);
-				break;
-			}
+	if (pDoc->am != -1)
+		lpos = pMdl->vline.padf_list.GetHeadPosition();
+	while (lpos) {
+		pPadf = (CPadf*)pMdl->vline.padf_list.GetNext(lpos);
+		rt.m_rect = pPadf->rect;
+		rt.m_rect.left -= pos.x;
+		rt.m_rect.top -= pos.y;
+		rt.m_rect.right -= pos.x;
+		rt.m_rect.bottom -= pos.y;
+		if (pPadf->type>=PADF_PROCESS && rt.HitTest(client_point)>=0) {
+			pDoc->pAPadf = pPadf;
+			InvalidateRect(NULL);
+			break;
 		}
+	}
 
 	// CG: このブロックはポップアップ メニュー コンポーネントによって追加されました
 	{
@@ -498,7 +388,7 @@ void CVEView::OnEditPaste()
 	pCls=(CClass*)pDoc->cls.GetAt(pDoc->cls.FindIndex(pDoc->ac));
 	for(i=0, count=0;i<MAX_PADFS; i++) {
 		pMdl = (CModule*)pCls->mdl.GetAt(pCls->mdl.FindIndex(pDoc->am));
-		pPadf = pDoc->GetPadf(pMdl, pDoc->ap);
+//		pPadf = pDoc->GetPadf(pMdl, pDoc->pAPadf);
 		type = pPadf->type;
 		if(type>=PADF_PROCESS && type<=PADF_REPEAT)
 				count++;
@@ -507,11 +397,11 @@ void CVEView::OnEditPaste()
 		sx=16;
 		sy=16;
 	} else
-		if (pDoc->ap!=-1) {
+		if (pDoc->pAPadf!=NULL) {
 			pMdl = (CModule*)pCls->mdl.GetAt(pCls->mdl.FindIndex(pDoc->am));
-			pPadf = pDoc->GetPadf(pMdl, pDoc->ap);
-			sx = pPadf->rect.left;
-			sy = pPadf->rect.bottom + 16;
+//			pPadf = pDoc->GetPadf(pMdl, pDoc->pAPadf);
+//			sx = pPadf->rect.left;
+//			sy = pPadf->rect.bottom + 16;
 		}
 	CVEView::OnEditPasteP();
 }
@@ -524,7 +414,7 @@ BOOL CVEView::IsSelected()
 	//       修正してください。一つ以上のアイテムが選択された場合には TRUE を、
 	//       選択、アイテムが選択されていない場合は FALSE を返します
 
-	if (GetDocument()->am!=-1 && GetDocument()->ap!=-1)
+	if (GetDocument()->am!=-1 && GetDocument()->pAPadf!=NULL)
 		return TRUE;
 	else
 		return FALSE;
@@ -534,7 +424,7 @@ void CVEView::DoCutCopyPaste(CArchive &ar, BOOL bCut)
 {
 	CVEDoc* pDoc=GetDocument();
 	int new_padf_num, am, ap, type, doc_type;
-	int center_x, center_y;
+	int center_y;
 	unsigned short width, height;
 	CClass* pCls;
 	CModule* pm;
@@ -551,9 +441,9 @@ void CVEView::DoCutCopyPaste(CArchive &ar, BOOL bCut)
 	if ((am=pDoc->am)==-1)
 		return;
 	pm=(CModule*)pCls->mdl.GetAt(pCls->mdl.FindIndex(am));
-	ap=pDoc->ap;
-	if(ap!=-1)
-		pAPadf=pDoc->GetPadf(pm,ap);
+	pPadf=pDoc->pAPadf;
+//	if(ap!=-1)
+//		pAPadf=pDoc->GetPadf(pm,ap);
 	if(ar.IsStoring()) {
 		if(ap!=-1) {
 			ar << (DWORD)1;
@@ -562,11 +452,11 @@ void CVEView::DoCutCopyPaste(CArchive &ar, BOOL bCut)
 			ar << (USHORT)(pAPadf->rect.right - pAPadf->rect.left +1);
 			ar << (USHORT)(pAPadf->rect.bottom - pAPadf->rect.top + 1);
 			ar << (CString)pAPadf->str;
-			ar << (CString)pAPadf->case_str;
-//			ar << (USHORT)pAPadf->num_branch;
+//			ar << (CString)pAPadf->case_str;
+			ar << (USHORT)pAPadf->num_branch;
 		}
 	} else {
-		if(pm->padf.GetCount()>=MAX_PADFS) {
+		if(pm->vline.padf_list.GetCount()>=MAX_PADFS) {
 			AfxMessageBox("これ以上ＰＡＤ図形を貼り付けできません");
 			return;
 		}
@@ -574,139 +464,139 @@ void CVEView::DoCutCopyPaste(CArchive &ar, BOOL bCut)
 		if(doc_type!=1)
 			return;
 		pPadf=new CPadf();
-		new_padf_num=pm->padf.GetCount();
+		new_padf_num=pm->vline.padf_list.GetCount();
 		pDoc->SetModifiedFlag();
 		ar >> (USHORT&)type;
 		ar >> (USHORT&)pPadf->type2;
 		ar >> (USHORT&)width;
 		ar >> (USHORT&)height;
 		ar >> (CString&)pPadf->str;
-		ar >> (CString&)pPadf->case_str;
-//		ar >> (USHORT&)pPadf->num_branch;
+//		ar >> (CString&)pPadf->case_str;
+		ar >> (USHORT&)pPadf->num_branch;
 
-		pPadf->rect.left = sx;
-		pPadf->rect.top = sy;
-		pPadf->rect.right = sx + width -1;
-		pPadf->rect.bottom = sy + height -1;
+//		pPadf->rect.left = sx;
+//		pPadf->rect.top = sy;
+//		pPadf->rect.right = sx + width -1;
+//		pPadf->rect.bottom = sy + height -1;
 		pPadf->num_branch = 0;
 		if (ap!=-1) {
-			center_x = (pAPadf->rect.left+pAPadf->rect.right)/2;	// アクティブ図形の中心位置のＸ座標を求める
-			center_y = (pAPadf->rect.top+pAPadf->rect.bottom)/2;	// アクティブ図形の中心位置のＹ座標を求める
-			prev_p = pAPadf->prev_p;	// アクティブ図形の一つ前の図形の番号を得る
-			next_p=pDoc->GetNextPadfNum(pm,ap,0);
+//			center_x = (pAPadf->rect.left+pAPadf->rect.right)/2;	// アクティブ図形の中心位置のＸ座標を求める
+//			center_y = (pAPadf->rect.top+pAPadf->rect.bottom)/2;	// アクティブ図形の中心位置のＹ座標を求める
+//			prev_p = pAPadf->prev_p;	// アクティブ図形の一つ前の図形の番号を得る
+//			next_p=pDoc->GetNextPadfNum(pm,ap,0);
 			switch(pAPadf->type) { // アクティブ図形のタイプで分岐する
 			case PADF_PROCESS:	// アクティブＰＡＤ図形が連接の時
-				pPadf->prev_p_pos=0;
-				if(type==PADF_COMMENT) {
-					pPadf->prev_p = -1;
-				} else {
-					pPadf->rect.left= pPadf->rect.left;	// 
-					pPadf->rect.right = pPadf->rect.left + width -1;
-					if(sy>center_y) {
-						pPadf->prev_p=ap;
-						if(next_p!=-1) {
-							pNextPadf=pDoc->GetPadf(pm,next_p);
-							pNextPadf->prev_p=new_padf_num;
-						}
-					} else {	// 上に追加
-						pPadf->prev_p=prev_p;	// 
-						pPadf->prev_p=new_padf_num;		// 
-					}
-				}
+//				pPadf->prev_p_pos=0;
+//				if(type==PADF_COMMENT) {
+//					pPadf->prev_p = -1;
+//				} else {
+//					pPadf->rect.left= pPadf->rect.left;	// 
+//					pPadf->rect.right = pPadf->rect.left + width -1;
+//					if(sy>center_y) {
+//						pPadf->prev_p=ap;
+//						if(next_p!=-1) {
+//							pNextPadf=pDoc->GetPadf(pm,next_p);
+//							pNextPadf->prev_p=new_padf_num;
+//						}
+//					} else {	// 上に追加
+//						pPadf->prev_p=prev_p;	// 
+//						pPadf->prev_p=new_padf_num;		// 
+//					}
+//				}
 				break;
 			case PADF_SELECTION:	// アクティブＰＡＤ図形が選択の時
-				if(sx<pAPadf->rect.right) {	// sxがアクティブＰＡＤの右端より左側の時
-					pPadf->prev_p_pos=0;
-					pPadf->rect.left=pPadf->rect.left;	// 
-					pPadf->rect.right = pPadf->rect.left + width -1;
-					if(sy>center_y) { 
-						pPadf->prev_p=ap;
-					} else {
-						pPadf->prev_p=prev_p;
-						pPadf->prev_p=new_padf_num;
-					}
-				} else {
-					pPadf->prev_p=ap;
-					switch(pAPadf->type2) {
-					case 0: // if
-						if(sy<center_y) {
-							pPadf->prev_p_pos=1;
-							pPadf->case_y=(unsigned short)pPadf->rect.top;
-						} else {
-							pPadf->prev_p_pos=2;
-							pPadf->case_y=(unsigned short)pPadf->rect.bottom;
-						}
-						break;
-					case 1: // switch
-						pPadf->prev_p_pos=pAPadf->num_branch+1;
-						switch(pAPadf->num_branch) {
-						case 0:
-							pPadf->case_y=(unsigned short)pPadf->rect.top;
-							break;
-						case 1:
-							pPadf->case_y=(unsigned short)pPadf->rect.bottom;
-							break;
-						default:
-							pPadf->rect.bottom=(sy+ey)/2;
-							pPadf->case_y=(unsigned short)pPadf->rect.bottom;
-							break;
-						}
-						break;
-					}
-					++pAPadf->num_branch;
-				}
+//				if(sx<pAPadf->rect.right) {	// sxがアクティブＰＡＤの右端より左側の時
+//					pPadf->prev_p_pos=0;
+//					pPadf->rect.left=pPadf->rect.left;	// 
+//					pPadf->rect.right = pPadf->rect.left + width -1;
+//					if(sy>center_y) { 
+//						pPadf->prev_p=ap;
+//					} else {
+//						pPadf->prev_p=prev_p;
+//						pPadf->prev_p=new_padf_num;
+//					}
+//				} else {
+//					pPadf->prev_p=ap;
+//					switch(pAPadf->type2) {
+//					case 0: // if
+//						if(sy<center_y) {
+//							pPadf->prev_p_pos=1;
+//							pPadf->case_y=(unsigned short)pPadf->rect.top;
+//						} else {
+//							pPadf->prev_p_pos=2;
+//							pPadf->case_y=(unsigned short)pPadf->rect.bottom;
+//						}
+//						break;
+//					case 1: // switch
+//						pPadf->prev_p_pos=pAPadf->num_branch+1;
+//						switch(pAPadf->num_branch) {
+//						case 0:
+//							pPadf->case_y=(unsigned short)pPadf->rect.top;
+//							break;
+//						case 1:
+//							pPadf->case_y=(unsigned short)pPadf->rect.bottom;
+//							break;
+//						default:
+//							pPadf->rect.bottom=(sy+ey)/2;
+//							pPadf->case_y=(unsigned short)pPadf->rect.bottom;
+//							break;
+//						}
+//						break;
+//					}
+//					++pAPadf->num_branch;
+//				}
 				break;
 			case PADF_REPEAT:
 				switch(pAPadf->num_branch) {
 				case 0: // 右側に図形がないなら
-					if(sx<pPadf->rect.right) {	// sxがアクティブＰＡＤの右端より左側の時
-						pPadf->prev_p_pos=0;
-						pPadf->rect.left=pPadf->rect.left;	// 追加される図形はアクティブな図形のＸ座標と同じにする
-						pPadf->rect.right = ex = pPadf->rect.left + width -1;
-						if(sy>center_y) {
-							pPadf->prev_p=ap;
-						} else {
-							pPadf->prev_p=prev_p;
-							pPadf->prev_p=new_padf_num;
-							pPadf->prev_p_pos=0;
-						}
-					} else {
-						pPadf->prev_p=ap;
-						pPadf->prev_p_pos=-1;
-						pPadf->num_branch=1;
-					}
+//					if(sx<pPadf->rect.right) {	// sxがアクティブＰＡＤの右端より左側の時
+//						pPadf->prev_p_pos=0;
+//						pPadf->rect.left=pPadf->rect.left;	// 追加される図形はアクティブな図形のＸ座標と同じにする
+//						pPadf->rect.right = ex = pPadf->rect.left + width -1;
+//						if(sy>center_y) {
+//							pPadf->prev_p=ap;
+//						} else {
+//							pPadf->prev_p=prev_p;
+//							pPadf->prev_p=new_padf_num;
+//							pPadf->prev_p_pos=0;
+//						}
+//					} else {
+//						pPadf->prev_p=ap;
+//						pPadf->prev_p_pos=-1;
+//						pPadf->num_branch=1;
+//					}
 					break;
 				case 1: // 右側に図形が１つあるなら
 					if(sy>center_y) { // 下にあるなら
-						if(pDoc->GetNextPadfNum(pm,ap,0==-1)) {
-							pPadf->prev_p=pDoc->ap;
-							pPadf->prev_p_pos=0;
-						} else {
-							pPadf->prev_p=pDoc->ap;
-						}
+//						if(pDoc->GetNextPadfNum(pm,ap,0==-1)) {
+//							pPadf->prev_p=pDoc->pAPadf;
+//							pPadf->prev_p_pos=0;
+//						} else {
+//							pPadf->prev_p=pDoc->pAPadf;
+//						}
 					} else { //　上にあるなら
-						pPadf->prev_p=prev_p;
-						pPadf->prev_p=new_padf_num;
-						pPadf->prev_p_pos=0;
+//						pPadf->prev_p=prev_p;
+//						pPadf->prev_p=new_padf_num;
+//						pPadf->prev_p_pos=0;
 					}
-					pPadf->prev_p_pos=0;
+//					pPadf->prev_p_pos=0;
 					break;
 				}
 				break;
 			case PADF_COMMENT:	// コメント
-				pPadf->prev_p=-1;
+//				pPadf->prev_p=-1;
 				break;
 			}
 			pPadf->type=type;
-			pDoc->ap=new_padf_num;
+//			pDoc->pAPadf=new_padf_num;
 		} else {
 			if(type==PADF_COMMENT) {
 				pPadf->type=type;
-				pDoc->ap=new_padf_num;
+//				pDoc->pAPadf=new_padf_num;
 			}
 		}
 		pPadf->num_branch=0;
-		pm->padf.AddTail((CObject*)pPadf);
+		pm->vline.padf_list.AddTail((CObject*)pPadf);
 	}
 
 	if (bCut)
@@ -741,53 +631,45 @@ void CVEView::OnPadproperty()
 
 	CVEDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
+	CClientDC dc(this);
 	CClass* pCls;
 	CModule* pm;
-	CPadf *pPadf, *pPadf2;
 
 	// ここは propSheet.DoModal() が IDOK を返した場合に、プロパティ
 	// ページから情報を取得する場所です。
 	// 簡略化のためここでは何も行っていません。
 	pCls=(CClass*)pDoc->cls.GetAt(pDoc->cls.FindIndex(pDoc->ac));
-	if (pDoc->am==-1 || pDoc->ap==-1)
+	if (pDoc->am==-1 || pDoc->pAPadf==NULL || pDoc->pAPadf==NULL)
 		return;
 	pm=(CModule*)pCls->mdl.GetAt(pCls->mdl.FindIndex(pDoc->am));
-	pPadf=pDoc->GetPadf(pm,pDoc->ap);
-	padf_type = pPadf->type;
-	padf_type2 = pPadf->type2;
+	padf_type = pDoc->pAPadf->type;
+	padf_type2 = pDoc->pAPadf->type2;
 	propSheet.m_Page1.m_type = cnv_tbl2[padf_type][padf_type2];
 	case_flag=FALSE;
-	if(prev_p!=-1) {
-		pPadf2=pDoc->GetPadf(pm,prev_p);
-		if(pPadf2->type==PADF_SELECTION && pPadf2->type2==1 && pPadf->prev_p_pos>0)
-			case_flag=TRUE;
-	}
-	case_str = pPadf->case_str;
 	padf_page_mode=1;
-	propSheet.m_Page1.m_str = pPadf->str;
-	propSheet.m_Page1.m_comment = pPadf->comment;
+	propSheet.m_Page1.m_str = pDoc->pAPadf->str;
+	propSheet.m_Page1.m_comment = pDoc->pAPadf->comment;
 
 	if ((propSheet.DoModal()==IDOK) && CheckString(propSheet.m_Page1.m_str)){
 		pDoc->SetModifiedFlag();
-		pPadf->str=propSheet.m_Page1.m_str;
-		pPadf->case_str=case_str;
-		pPadf->comment=propSheet.m_Page1.m_comment;
-		pPadf->type = cnv_tbl[propSheet.m_Page1.m_type][0];
-		pPadf->type2 = cnv_tbl[propSheet.m_Page1.m_type][1];
+		pDoc->pAPadf->str=propSheet.m_Page1.m_str;
+		pDoc->pAPadf->comment=propSheet.m_Page1.m_comment;
+		pDoc->pAPadf->type = cnv_tbl[propSheet.m_Page1.m_type][0];
+		pDoc->pAPadf->type2 = cnv_tbl[propSheet.m_Page1.m_type][1];
 
 		CClientDC dc(this);
 		CSize size;
 		CString str;
 
-		str.Format(padf_msg[pPadf->type][pPadf->type2], propSheet.m_Page1.m_str);
-		pPadf->rect.right = pPadf->rect.left + dc.GetTextExtent(str).cx -1;
-		switch(pPadf->type){
+		str.Format(padf_msg[pDoc->pAPadf->type][pDoc->pAPadf->type2], propSheet.m_Page1.m_str);
+		pDoc->pAPadf->rect.right = pDoc->pAPadf->rect.left + dc.GetTextExtent(str).cx -1;
+		switch(pDoc->pAPadf->type){
 		case PADF_PROCESS:
-			pPadf->rect.right += 8*2;
+			pDoc->pAPadf->rect.right += 8*2;
 			break;
 		case PADF_SELECTION:
 		case PADF_REPEAT:
-			pPadf->rect.right += 8*4;
+			pDoc->pAPadf->rect.right += 8*4;
 			break;
 		case PADF_COMMENT:
 			break;
@@ -812,341 +694,85 @@ void CVEView::OnLButtonDblClk(UINT nFlags, CPoint point)
 	CClass* pCls;
 	CModule* pm;
 	CPadf* pPadf;
-	int i=0;
 	POSITION lpos;
 	
 	pCls=(CClass*)pDoc->cls.GetAt(pDoc->cls.FindIndex(pDoc->ac));
 	if(pDoc->am==-1)
 		return;
 	pm=(CModule*)pCls->mdl.GetAt(pCls->mdl.FindIndex(pDoc->am));
-	if(pm->padf.GetCount()==0)
+	if(pm->vline.padf_list.GetCount()==0)
 		return;
 	pos = GetScrollPosition();
-	lpos=pm->padf.GetHeadPosition();
+	lpos=pm->vline.padf_list.GetHeadPosition();
 	while(lpos) {
-		pPadf = (CPadf*)pm->padf.GetNext(lpos);
+		pPadf = (CPadf*)pm->vline.padf_list.GetNext(lpos);
 		rt.m_rect = pPadf->rect;
 		rt.m_rect.left -= pos.x;
 		rt.m_rect.top -= pos.y;
 		rt.m_rect.right -= pos.x;
 		rt.m_rect.bottom -= pos.y;
 		if (pPadf->type>=PADF_PROCESS && pPadf->type<=PADF_COMMENT && rt.HitTest(point)>=0) {
-			pDoc->ap=i;
+			pDoc->pAPadf=pPadf;
 			OnPadproperty();
 			InvalidateRect(NULL);
 			return;
 		}
-		i++;
 	}
 	CScrollView::OnLButtonDblClk(nFlags, point);
 }
 
-void CVEView::InsertPadf(int type1=PADF_PROCESS, int type2=0, int mode=0) // ＰＡＤ図形やコメントの挿入
-{
-	// TODO: この位置にコマンド ハンドラ用のコードを追加してください
-	CPadfPropertySheet propSheet;
-
-	CVEDoc* pDoc = GetDocument();
-	ASSERT_VALID(pDoc);
-	int center_x, center_y, type, new_padf_num, padf_xsize, padf_ysize;
-	CClass* pCls;
-	CModule* pm;
-	CPadf *pPadf, *pAPadf, *pNextPadf;
-	// ここは propSheet.DoModal() が IDOK を返した場合に、プロパティ
-	// ページから情報を取得する場所です。
-	// 簡略化のためここでは何も行っていません。
-	pAPadf = pNextPadf = NULL;
-	if(pDoc->ac<0 || pDoc->ac >= pDoc->cls.GetCount())
-		return;
-	pCls=(CClass*)pDoc->cls.GetAt(pDoc->cls.FindIndex(pDoc->ac));
-	if(pCls->type==CLSTYPE_UNION)
-		return;
-	if (pDoc->am==-1)
-		return;
-	pm=(CModule*)pCls->mdl.GetAt(pCls->mdl.FindIndex(pDoc->am));
-	if (pm->padf.GetCount()>=MAX_PADFS) {
-		MessageBeep(0);
-		AfxMessageBox("これ以上ＰＡＤ図形やコメントを追加できません。");
-		return;
-	}
-	propSheet.m_Page1.m_type = cnv_tbl2[type1][type2];	// 0=処理
-	propSheet.m_Page1.m_str="";
-	propSheet.m_Page1.m_comment="";
-//	propSheet.m_Page1.m_case.SetWindowText("");
-	if(pDoc->ap!=-1)
-		pAPadf=pDoc->GetPadf(pm,pDoc->ap);
-	case_flag=FALSE;
-	if(pDoc->ap!=-1) {
-		center_x=(pAPadf->rect.left+pAPadf->rect.right)/2;	// アクティブ図形の中心位置のＸ座標を求める
-		center_y=(pAPadf->rect.top+pAPadf->rect.bottom)/2;	// アクティブ図形の中心位置のＹ座標を求める
-		if(pAPadf->type==PADF_SELECTION && pAPadf->type2==1 && pAPadf->rect.right<=sx)
-			case_flag=TRUE;
-	}
-	case_str="";
-	padf_page_mode=mode;
-
-	if (propSheet.DoModal()==IDOK && CheckString(propSheet.m_Page1.m_str)) {
-		CClientDC dc(this);
-		CSize size;
-		CString string;
-
-		pDoc->SetModifiedFlag();
-		pPadf = new CPadf();
-		pPadf->str = propSheet.m_Page1.m_str;
-		new_padf_num=pm->padf.GetCount();
-		pPadf->type = type = cnv_tbl[propSheet.m_Page1.m_type][0];
-		pPadf->type2 = cnv_tbl[propSheet.m_Page1.m_type][1];
-		if(sx<16)
-			sx = 16;
-		pPadf->rect.left = sx;
-		if(sy<16)
-			sy = 16;
-		pPadf->rect.top = sy;
-		string.Format(padf_msg[pPadf->type][pPadf->type2], pPadf->str);
-		size = dc.GetTextExtent(string);
-		padf_xsize = size.cx;
-		padf_ysize = PADF_HEIGHT;
-		pPadf->comment = propSheet.m_Page1.m_comment;
-		pPadf->num_branch = 0;
-//		propSheet.m_Page1.m_case.GetWindowText(pPadf->case_str);
-		pPadf->case_str=case_str;
-		switch(type) { // 挿入するＰＡＤ図形のタイプによって分岐する
-		case PADF_PROCESS: // 連接
-			padf_xsize += 8*2;
-			break;
-		case PADF_SELECTION:	// 選択
-			padf_xsize += 8*4;
-			padf_ysize = 16*3;
-			break;
-		case PADF_REPEAT:	// 反復
-			padf_xsize += 8*4;
-			break;
-		case PADF_COMMENT: // コメント
-			break;
-		default:
-			AfxMessageBox("このプログラムには不具合があります。");
-			return;
-		}
-		pPadf->rect.right = ex = sx + padf_xsize -1;
-		pPadf->rect.bottom = ey = sy + padf_ysize -1;
-		if (pDoc->ap!=-1) {
-			prev_p = pAPadf->prev_p;	// アクティブ図形の一つ前の図形を得る
-			next_p = pDoc->GetNextPadfNum(pm,pDoc->ap,0);	// アクティブ図形の一つ後の図形を得る
-			if(next_p!=-1)
-				pNextPadf=pDoc->GetPadf(pm,next_p);
-			switch(pAPadf->type) { // アクティブ図形のタイプで分岐する
-			case PADF_PROCESS:	// アクティブＰＡＤ図形が連接の時
-				pPadf->prev_p_pos=0;
-				pPadf->rect.left = pAPadf->rect.left;	// 
-				pPadf->rect.right = ex = pPadf->rect.left + padf_xsize;
-				switch(type) { // 挿入するＰＡＤ図形のタイプによって分岐する
-				case PADF_PROCESS: // 連接
-					pPadf->rect.right = pPadf->rect.left + padf_xsize -1;
-					break;
-				case PADF_SELECTION:	// 選択
-					pPadf->rect.right = pPadf->rect.left + padf_xsize -1;
-					pPadf->rect.bottom = pPadf->rect.top + padf_ysize -1;
-					break;
-				case PADF_REPEAT:	// 反復
-					pPadf->rect.right = pPadf->rect.left + padf_xsize -1;
-					break;
-				case PADF_COMMENT: // コメント
-					break;
-				default:
-					AfxMessageBox("このプログラムには不具合があります。");
-					return;
-				}
-				if(sy>center_y) {
-					pPadf->rect.top = pAPadf->rect.bottom + 16;
-					pPadf->rect.bottom = pPadf->rect.top + padf_ysize;
-					if(type!=PADF_COMMENT) { // アクティブＰＡＤ図形の下にＰＡＤ図形を追加する作業
-						pPadf->prev_p=pDoc->ap;
-						if(next_p!=-1)
-							pNextPadf->prev_p=new_padf_num;
-					} else {
-						pPadf->prev_p=-1;
-					}
-				} else {	// 上に追加
-					pPadf->rect.bottom = pAPadf->rect.top - 16;
-					pPadf->rect.right = ex = sx + padf_xsize -1;
-					pPadf->rect.bottom = ey = sy + padf_ysize -1;
-					switch(pPadf->type) {
-					case PADF_PROCESS: // 連接
-						break;
-					case PADF_SELECTION:	// 選択
-						break;
-					case PADF_REPEAT:	// 反復
-						break;
-					case PADF_COMMENT: // コメント
-						break;
-					default:
-						AfxMessageBox("このプログラムには不具合があります。");
-						return;
-					}
-					if(pPadf->type!=PADF_COMMENT) {
-						// アクティブＰＡＤ図形の上にＰＡＤ図形を追加する作業
-						pPadf->prev_p=pAPadf->prev_p;
-						pAPadf->prev_p=new_padf_num;	// アクティブ図形の上に追加する図形を指定する
-						pAPadf->prev_p_pos=0;	// ひとつ上なので0
-					} else
-						pPadf->prev_p=-1;
-				}
-				break;
-			case PADF_SELECTION:	// アクティブＰＡＤ図形が選択の時
-				if((0==pAPadf->type2 && 2==pAPadf->num_branch)|| sx<center_x) {	// ポインタが中央より左側の時
-					if(sy>center_y) { //ポインタが中心より下の場合
-						pPadf->prev_p=pDoc->ap;
-						pPadf->prev_p_pos=0;
-						if(next_p != -1)
-							pNextPadf->prev_p = new_padf_num;
-					} else {
-						pPadf->prev_p=pAPadf->prev_p;
-						pAPadf->prev_p=new_padf_num;
-						pAPadf->prev_p_pos=0;
-					}
-				} else {
-					pPadf->prev_p=pDoc->ap;
-					switch(pAPadf->type2) { // ifかswitchかで分岐
-					case 0: // if（２択）
-						if(pAPadf->num_branch<2) {
-							if(sy<center_y) {
-								pPadf->prev_p_pos=1;
-								pPadf->case_y=(unsigned short)pAPadf->rect.top;
-							} else {
-								pPadf->prev_p_pos=2;
-								pPadf->case_y=(unsigned short)pAPadf->rect.bottom;
-							}
-						}
-						break;
-					case 1: // switch（複数選択）
-						pPadf->prev_p_pos=pAPadf->num_branch+1;
-						pPadf->case_y=(unsigned short)(pPadf->rect.top+pPadf->rect.bottom)/2;
-						switch(pAPadf->num_branch) {
-						case 0:	// ない場合
-							pAPadf->rect.top=pPadf->case_y;
-							break;
-						case 1:	// ひとつある場合
-							break;
-						default:
-							if(pAPadf->rect.bottom < pPadf->case_y)
-								pAPadf->rect.bottom=pPadf->case_y;
-							break;
-						}
-						break;
-					}
-					++pAPadf->num_branch;
-				}
-				break;
-			case PADF_REPEAT:
-				switch(pPadf->num_branch) {
-				case 0: // 右側に図形がないなら
-					if(sx<center_x) {	// マウスカーソルがアクティブ図形の中央より左なら
-						pPadf->prev_p_pos=0;
-						pPadf->rect.left=pPadf->rect.left;	// 追加される図形はアクティブな図形のＸ座標と同じにする
-						pPadf->rect.right = ex = pPadf->rect.left + padf_xsize;
-						if(sy>center_y) {
-							pPadf->prev_p=pDoc->ap;
-						} else {
-							pPadf->prev_p=prev_p;
-							pNextPadf->prev_p=new_padf_num;
-							pPadf->prev_p_pos=0;
-						}
-					} else {
-						pPadf->prev_p=pDoc->ap;
-						pPadf->prev_p_pos=-1;
-						pPadf->num_branch=1;
-					}
-					break;
-				case 1: // 右側に図形が１つあるなら
-					if(sy>center_y) { // 下にあるなら
-						if(pDoc->GetNextPadfNum(pm,pDoc->ap,0==-1)) {
-							pPadf->prev_p=pDoc->ap;
-							pPadf->prev_p_pos=0;
-						} else {
-							pPadf->prev_p=pDoc->ap;
-						}
-					} else { //　上にあるなら
-						pPadf->prev_p=prev_p;
-						pPadf->prev_p=new_padf_num;
-						pPadf->prev_p_pos=0;
-					}
-					pPadf->prev_p_pos=0;
-					break;
-				}
-				break;
-			case PADF_COMMENT:	// コメント
-				pPadf->prev_p=-1;
-				break;
-			}
-		} else {
-			pPadf->prev_p = -1;
-			pPadf->prev_p_pos = 0;
-		}
-		pm->padf.AddTail((CObject*)pPadf);
-		pDoc->ap=new_padf_num;
-	}
-	InvalidateRect(NULL);
-}
 
 void CVEView::OnEditDelete() 
 {
 	// TODO: この位置にコマンド ハンドラ用のコードを追加してください
 	CVEDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
-	int i, prev_p, num_padfs;
+	int num_padfs;
 	CClass* pCls;
 	CModule *pm;
-	CPadf *pActPadf, *pPadf, *pPrevPadf, *pNextPadf;
+	CPadf *pPadf, *pPrevPadf;
 	POSITION lpos;
 
 	pPadf = NULL;
 	pCls=(CClass*)pDoc->cls.GetAt(pDoc->cls.FindIndex(pDoc->ac));
-	if (pDoc->am==-1 || pDoc->ap==-1)
-		return;
+//	if (pDoc->am==-1 || pDoc->pAPadf==-1)
+//		return;
 	pm=(CModule*)pCls->mdl.GetAt(pCls->mdl.FindIndex(pDoc->am));
-	num_padfs=pm->padf.GetCount();
+	num_padfs=pm->vline.padf_list.GetCount();
 
 	if(num_padfs>=2) {
-		pActPadf=pDoc->GetPadf(pm,pDoc->ap);	// 
-		prev_p=pActPadf->prev_p;	// Active PADFの一つ前のPADFを得る
-		lpos=pm->padf.GetHeadPosition();
+		lpos=pm->vline.padf_list.GetHeadPosition();
 		while(lpos) {
-			pPadf=(CPadf*)pm->padf.GetNext(lpos);
-			if(pPadf->prev_p!=-1) {
-				pPrevPadf=pDoc->GetPadf(pm,pPadf->prev_p);
-				if (pPadf->prev_p==pDoc->ap)
-					pPadf->prev_p=pPrevPadf->prev_p;
-			}
+			pPadf=(CPadf*)pm->vline.padf_list.GetNext(lpos);
+//			if(pPadf->prev_p!=-1) {
+//				pPrevPadf=pDoc->GetPadf(pm,pPadf->prev_p);
+//				if (pPadf->prev_p==pDoc->pAPadf)
+//					pPadf->prev_p=pPrevPadf->prev_p;
+//			}
 		}
 		if(prev_p!=-1) {
-			pPrevPadf=pDoc->GetPadf(pm,prev_p);
+//			pPrevPadf=pDoc->GetPadf(pm,prev_p);
 			if(prev_p != -1) {
-				if (pPrevPadf->type>=PADF_SELECTION && pPrevPadf->type<=PADF_REPEAT && pPrevPadf->num_branch>0 && pActPadf->prev_p_pos!=0) {
-					if (!(PADF_SELECTION==pPrevPadf->type && 1==pPrevPadf->type2)) {
-						for(i=pActPadf->prev_p_pos; i<pPrevPadf->num_branch-1; i++) {
-							pPadf=pDoc->GetPadf(pm,pDoc->GetNextPadfNum(pm,prev_p,i));
-							pNextPadf=pDoc->GetPadf(pm,pDoc->GetNextPadfNum(pm,prev_p,i+1));
-							pPadf->case_y=pNextPadf->case_y;
-							pPadf->prev_p_pos--;
-							pNextPadf->prev_p_pos--;
-						}
-					} else
-						if (pPrevPadf->prev_p_pos!=0)
-							pPadf->prev_p_pos=pPrevPadf->prev_p_pos;
-					pPrevPadf->num_branch--;
+				if (pPrevPadf->type >= PADF_SELECTION && pPrevPadf->type <= PADF_REPEAT && pPrevPadf->num_branch > 0) {
+					if (!(PADF_SELECTION == pPrevPadf->type && 1 == pPrevPadf->type2)) {
+//						for(i=pActPadf->prev_p_pos; i<pPrevPadf->num_branch-1; i++) {
+//							pPadf=pDoc->GetPadf(pm,pDoc->GetNextPadfNum(pm,prev_p,i));
+//							pNextPadf=pDoc->GetPadf(pm,pDoc->GetNextPadfNum(pm,prev_p,i+1));
+//							pPadf->case_y=pNextPadf->case_y;
+//							pPadf->prev_p_pos--;
+//							pNextPadf->prev_p_pos--;
+					} else {
+//						if (pPrevPadf->prev_p_pos!=0)
+//							pPadf->prev_p_pos=pPrevPadf->prev_p_pos;
+						pPrevPadf->num_branch--;
+					}
 				}
 			}
 		}
-		lpos=pm->padf.GetHeadPosition();
-		while(lpos) {
-			pPadf=(CPadf*)pm->padf.GetNext(lpos);
-			if(pPadf->prev_p>pDoc->ap)
-				pPadf->prev_p--;
-		}
 	}
-	delete pDoc->GetPadf(pm,pDoc->ap);
-	pm->padf.RemoveAt(pm->padf.FindIndex(pDoc->ap));
-	pDoc->ap=-1;
+//	delete pDoc->GetPadf(pm,pDoc->pAPadf);
+//	pm->padf.RemoveAt(pm->padf.FindIndex(pDoc->pAPadf));
+	pDoc->pAPadf = NULL;
 	InvalidateRect(NULL);
 }
 
@@ -1158,7 +784,7 @@ void CVEView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	CVEDoc* pDoc = GetDocument();
 	CClass* pCls;
 	CModule* pm;
-	CPadf *pPadf, *pPadf2;
+	CPadf *pPadf;
 	CRect rect;
 
 	pCls=(CClass*)pDoc->cls.GetAt(pDoc->cls.FindIndex(pDoc->ac));
@@ -1198,7 +824,7 @@ void CVEView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	default:
 		break;
 	}
-	if (pDoc->ap==-1) {
+	if (pDoc->pAPadf==NULL) {
 		CPoint pos;
 		GetCursorPos(&pos); // Windows API 注意！　このＡＰＩで得られる座標はクライアント座標ではなくスクリーン座標です。
 		switch (nChar) {
@@ -1231,7 +857,7 @@ void CVEView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		return;
 	}
 	pm=(CModule*)pCls->mdl.GetAt(pCls->mdl.FindIndex(pDoc->am));
-	pPadf=pDoc->GetPadf(pm, pDoc->ap);
+	pPadf=pDoc->pAPadf;
 	sx=pPadf->rect.left;
 	sy=pPadf->rect.top;
 	ex=pPadf->rect.right;
@@ -1267,7 +893,7 @@ void CVEView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		return;
 		break;
 	case VK_ESCAPE:
-		pDoc->ap=-1;
+		pDoc->pAPadf=NULL;
 		InvalidateRect(NULL);
 		CScrollView::OnKeyDown(nChar, nRepCnt, nFlags);
 		return;
@@ -1292,11 +918,6 @@ void CVEView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	pPadf->rect.top=sy;
 	pPadf->rect.right=ex;
 	pPadf->rect.bottom=ey;
-	if(pPadf->prev_p!=-1) {
-		pPadf2=pDoc->GetPadf(pm,pPadf->prev_p);
-		if(PADF_SELECTION==pPadf2->type && 1==pPadf2->type2 && pDoc->GetNextPadfNum(pm,pDoc->ap,0)==-1)
-			pPadf->case_y= (WORD)((pPadf->rect.top+pPadf->rect.bottom)/2);
-	}
 	InvalidateRect(NULL);
 
 	CScrollView::OnKeyDown(nChar, nRepCnt, nFlags);
@@ -1319,6 +940,207 @@ void CVEView::OnUpdateInsertPadf(CCmdUI* pCmdUI)
 		pCmdUI->Enable(FALSE);
 }
 
+void CVEView::InsertPadf(int type1 = PADF_PROCESS, int type2 = 0, int mode = 0) // ＰＡＤ図形やコメントの挿入
+{
+	// TODO: この位置にコマンド ハンドラ用のコードを追加してください
+	CPadfPropertySheet propSheet;
+
+	CVEDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	int center_x, center_y, type, new_padf_num, padf_xsize, padf_ysize;
+	CClass* pCls;
+	CModule* pm;
+	CPadf *pPadf;
+	// ここは propSheet.DoModal() が IDOK を返した場合に、プロパティ
+	// ページから情報を取得する場所です。
+	// 簡略化のためここでは何も行っていません。
+	if (pDoc->ac<0 || pDoc->ac >= pDoc->cls.GetCount())
+		return;
+	pCls = (CClass*)pDoc->cls.GetAt(pDoc->cls.FindIndex(pDoc->ac));
+	if (pCls->type == CLSTYPE_UNION)
+		return;
+	if (pDoc->am == -1)
+		return;
+	pm = (CModule*)pCls->mdl.GetAt(pCls->mdl.FindIndex(pDoc->am));
+	if (pm->total_padfs >= MAX_PADFS) {
+		MessageBeep(0);
+		AfxMessageBox("これ以上ＰＡＤ図形やコメントを追加できません。");
+		return;
+	}
+	propSheet.m_Page1.m_type = cnv_tbl2[type1][type2];	// 0=処理
+	propSheet.m_Page1.m_str = "";
+	propSheet.m_Page1.m_comment = "";
+//	propSheet.m_Page1.m_case.SetWindowText("");
+	case_flag = FALSE;
+	if (pDoc->pAPadf != NULL) {
+		center_x = (pDoc->pAPadf->rect.left + pDoc->pAPadf->rect.right) / 2;	// アクティブ図形の中心位置のＸ座標を求める
+		center_y = (pDoc->pAPadf->rect.top + pDoc->pAPadf->rect.bottom) / 2;	// アクティブ図形の中心位置のＹ座標を求める
+		if (pDoc->pAPadf->type == PADF_SELECTION && pDoc->pAPadf->type2 == 1 && pDoc->pAPadf->rect.right <= sx)
+			case_flag = TRUE;
+	}
+	padf_page_mode = mode;
+
+	if (propSheet.DoModal() == IDOK && CheckString(propSheet.m_Page1.m_str)) {
+		CClientDC dc(this);
+		CSize size;
+		CString string;
+
+		pDoc->SetModifiedFlag();
+		pPadf = new CPadf();
+		pPadf->str = propSheet.m_Page1.m_str;
+		new_padf_num = pm->vline.padf_list.GetCount();
+		pPadf->type = type = cnv_tbl[propSheet.m_Page1.m_type][0];
+		pPadf->type2 = cnv_tbl[propSheet.m_Page1.m_type][1];
+		sx = pm->vline.x;
+		if (sx<16)
+			sx = 16;
+		pPadf->rect.left = sx;
+		if (sy<16)
+			sy = 16;
+		pPadf->rect.top = sy;
+		string.Format(padf_msg[pPadf->type][pPadf->type2], pPadf->str);
+		size = dc.GetTextExtent(string);
+		padf_xsize = size.cx;
+		padf_ysize = PADF_HEIGHT;
+		pPadf->comment = propSheet.m_Page1.m_comment;
+		switch (type) { // 挿入するＰＡＤ図形のタイプによって分岐する
+		case PADF_PROCESS: // 連接
+			padf_xsize += 8 * 2;
+			break;
+		case PADF_SELECTION:	// 選択
+			padf_xsize += 8 * 4;
+			padf_ysize = 16 * 3;
+			break;
+		case PADF_REPEAT:	// 反復
+			padf_xsize += 8 * 4;
+			break;
+		case PADF_COMMENT: // コメント
+			break;
+		default:
+			AfxMessageBox("このプログラムには不具合があります。");
+			return;
+		}
+		pPadf->rect.right = ex = sx + padf_xsize - 1;
+		pPadf->rect.bottom = ey = sy + padf_ysize - 1;
+		if (pDoc->pAPadf != NULL) {
+			switch (pDoc->pAPadf->type) { // アクティブ図形のタイプで分岐する
+			case PADF_PROCESS:	// アクティブＰＡＤ図形が連接の時
+				pPadf->rect.left = pDoc->pAPadf->rect.left;	// 
+				pPadf->rect.right = ex = pPadf->rect.left + padf_xsize;
+				switch (type) { // 挿入するＰＡＤ図形のタイプによって分岐する
+				case PADF_PROCESS: // 連接
+					pPadf->rect.right = pPadf->rect.left + padf_xsize - 1;
+					break;
+				case PADF_SELECTION:	// 選択
+					pPadf->rect.right = pPadf->rect.left + padf_xsize - 1;
+					pPadf->rect.bottom = pPadf->rect.top + padf_ysize - 1;
+					break;
+				case PADF_REPEAT:	// 反復
+					pPadf->rect.right = pPadf->rect.left + padf_xsize - 1;
+					break;
+				case PADF_COMMENT: // コメント
+					break;
+				default:
+					AfxMessageBox("このプログラムには不具合があります。");
+					return;
+				}
+				if (sy > center_y) {
+					pPadf->rect.top = pDoc->pAPadf->rect.bottom + 16;
+					pPadf->rect.bottom = pPadf->rect.top + padf_ysize;
+					if (type != PADF_COMMENT) { // アクティブＰＡＤ図形の下にＰＡＤ図形を追加する作業
+												//						pPadf->prev_p=pDoc->pAPadf;
+					}
+				} else {	// 上に追加
+					pPadf->rect.bottom = pDoc->pAPadf->rect.top - 16;
+					pPadf->rect.right = ex = sx + padf_xsize - 1;
+					pPadf->rect.bottom = ey = sy + padf_ysize - 1;
+					switch (pPadf->type) {
+					case PADF_PROCESS: // 連接
+						break;
+					case PADF_SELECTION:	// 選択
+						break;
+					case PADF_REPEAT:	// 反復
+						break;
+					case PADF_COMMENT: // コメント
+						break;
+					default:
+						AfxMessageBox("このプログラムには不具合があります。");
+						return;
+					}
+					if (pPadf->type != PADF_COMMENT) {
+						// アクティブＰＡＤ図形の上にＰＡＤ図形を追加する作業
+					}
+				}
+				break;
+			case PADF_SELECTION:	// アクティブＰＡＤ図形が選択の時
+				if ((0 == pDoc->pAPadf->type2 && 2 == pDoc->pAPadf->num_branch) || sx < center_x) {	// ポインタが中央より左側の時
+					if (sy > center_y) { //ポインタが中心より下の場合
+ //						if(next_p != -1)
+					}
+					else {
+					}
+				} else {
+					switch (pDoc->pAPadf->type2) { // ifかswitchかで分岐
+					case 0: // if（２択）
+						if (pDoc->pAPadf->num_branch < 2) {
+							if (sy < center_y) {
+//								pPadf->case_y=(unsigned short)pAPadf->rect.top;
+							} else {
+//								pPadf->prev_p_pos=2;
+//								pPadf->case_y=(unsigned short)pAPadf->rect.bottom;
+							}
+						}
+						break;
+					case 1: // switch（複数選択）
+	//					pPadf->prev_p_pos=pAPadf->num_branch+1;
+		//				pPadf->case_y=(unsigned short)(pPadf->rect.top+pPadf->rect.bottom)/2;
+						switch (pDoc->pAPadf->num_branch) {
+						case 0:	// ない場合
+							break;
+						case 1:	// ひとつある場合
+							break;
+						default:
+//							if(pAPadf->rect.bottom < pPadf->case_y)
+//								pAPadf->rect.bottom=pPadf->case_y;
+							break;
+						}
+						break;
+					}
+					++pDoc->pAPadf->num_branch;
+				}
+				break;
+			case PADF_REPEAT:
+				switch (pPadf->num_branch) {
+				case 0: // 右側に図形がないなら
+					if (sx < center_x) {	// マウスカーソルがアクティブ図形の中央より左なら
+	//					pPadf->prev_p_pos=0;
+	//					pPadf->rect.left=pPadf->rect.left;	// 追加される図形はアクティブな図形のＸ座標と同じにする
+	//					pPadf->rect.right = ex = pPadf->rect.left + padf_xsize;
+						if (sy > center_y) {
+						}
+						else {
+						}
+					}
+					else {
+						pPadf->num_branch = 1;
+					}
+					break;
+				}
+				break;
+			case PADF_COMMENT:	// コメント
+				break;
+			}
+		}
+		pm->vline.padf_list.AddTail((CObject*)pPadf);
+		if (0 == pm->total_padfs)
+			pm->vline.sy = pPadf->rect.top;
+		pm->vline.ey = pPadf->rect.bottom;
+		pDoc->pAPadf = pPadf;
+		pm->total_padfs++;
+		InvalidateRect(NULL);
+	}
+}
+
 void CVEView::LClick(UINT nFlags, CPoint point)
 {
 	CVEDoc* pDoc = GetDocument();
@@ -1327,7 +1149,6 @@ void CVEView::LClick(UINT nFlags, CPoint point)
 	CPadf *pPadf, *pPrevPadf;
 	CClientDC dc(this);
 	CString string;
-	CRect local_rect;
 	bool ctrl_flag;
 	int move_x, move_y;
 	
@@ -1343,17 +1164,15 @@ void CVEView::LClick(UINT nFlags, CPoint point)
 		ctrl_flag=true;
 	else
 		ctrl_flag=false;
-	int i=0;
-	POSITION lpos=pm->padf.GetHeadPosition();
+	POSITION lpos=pm->vline.padf_list.GetHeadPosition();
 	while(lpos) {
-		pPadf=(CPadf*)pm->padf.GetNext(lpos);
+		pPadf=(CPadf*)pm->vline.padf_list.GetNext(lpos);
 		if (pPadf->type>=PADF_PROCESS && pPadf->type<=PADF_COMMENT) {
 			rt.m_rect = pPadf->rect;
 			rt.m_rect.left -= pos.x;
 			rt.m_rect.top -= pos.y;
 			rt.m_rect.right -= pos.x;
 			rt.m_rect.bottom -= pos.y;
-			local_rect = rt.m_rect;
 			if (rt.HitTest(point)>=0 && nFlags & MK_LBUTTON) {
 				rt.Track(this,point,FALSE);
 				move_x = rt.m_rect.left + pos.x - pPadf->rect.left;
@@ -1361,29 +1180,31 @@ void CVEView::LClick(UINT nFlags, CPoint point)
 				pPadf->rect.top = rt.m_rect.top + pos.y;
 				pPadf->rect.bottom = rt.m_rect.bottom + pos.y;
 				pPadf->rect.left = rt.m_rect.left + pos.x;
-				if(pPadf->prev_p!=-1)
-					pPrevPadf=pDoc->GetPadf(pm,pPadf->prev_p);
-				if(pPadf->prev_p_pos!=0) {
-					pPadf->rect.left = rt.m_rect.left + pos.x;
-					pPadf->rect.right = rt.m_rect.right + pos.x;
-					if(ctrl_flag && pPadf->prev_p != -1 && pPrevPadf->num_branch!=pPadf->prev_p_pos)
-						pPadf->case_y += (WORD)pPadf->rect.top - (WORD)local_rect.top;
-				} else {
-					if(pPadf->prev_p!=-1) { // 一番最初のＰＡＤでなければ
-						if(PADF_SELECTION==pPrevPadf->type && 1==pPrevPadf->type2) {
-							if(pDoc->GetNextPadfNum(pm,i,0)==-1)
-								pPadf->case_y= (WORD)((pPadf->rect.top+pPadf->rect.bottom)/2);
-							if(pPrevPadf->num_branch==pPadf->prev_p_pos)
-								pPadf->case_y= (WORD)pPrevPadf->rect.bottom;
-						}
-						pPadf->rect.left = pPrevPadf->rect.left;
-					}
-				}
-				if(pPadf->rect.left<16)
-					pPadf->rect.left=16;
+//				if(pPadf->prev_p!=-1)
+//					pPrevPadf=pDoc->GetPadf(pm,pPadf->prev_p);
+//				if(pPadf->prev_p_pos!=0) {
+//					pPadf->rect.left = rt.m_rect.left + pos.x;
+//					pPadf->rect.right = rt.m_rect.right + pos.x;
+//					if(ctrl_flag && pPadf->prev_p != -1 && pPrevPadf->num_branch!=pPadf->prev_p_pos)
+//						pPadf->case_y += (WORD)pPadf->rect.top - (WORD)local_rect.top;
+//				} else {
+//					if(pPadf->prev_p!=-1) { // 一番最初のＰＡＤでなければ
+//						if(PADF_SELECTION==pPrevPadf->type && 1==pPrevPadf->type2) {
+//							if(pDoc->GetNextPadfNum(pm,i,0)==-1)
+//								pPadf->case_y= (WORD)((pPadf->rect.top+pPadf->rect.bottom)/2);
+//							if(pPrevPadf->num_branch==pPadf->prev_p_pos)
+//								pPadf->case_y= (WORD)pPrevPadf->rect.bottom;
+//						}
+//						pPadf->rect.left = pPrevPadf->rect.left;
+//					}
+//				}
+				if (pPadf->rect.left<16)
+					pPadf->rect.left = 16;
+				if (pPadf->rect.top<16)
+					pPadf->rect.top = 16;
 				string.Format(padf_msg[pPadf->type][pPadf->type2], pPadf->str);
 				pPadf->rect.right=pPadf->rect.left + dc.GetTextExtent(string).cx -1;
-				switch(pPadf->type) { 
+				switch(pPadf->type) {
 				case 0: // 連接
 					pPadf->rect.right += 8*2;
 					break;
@@ -1395,21 +1216,21 @@ void CVEView::LClick(UINT nFlags, CPoint point)
 					pPadf->rect.bottom = pPadf->rect.top + COMMENT_HEIGHT;
 				break;
 				}
-				MoveUnderPadf(i, move_x, move_y);
-				pDoc->ap=i;
-//				InvalidateRect(NULL);
+//				MoveUnderPadf(i, move_x, move_y);
+				pDoc->pAPadf = pPadf;
+				InvalidateRect(NULL);
 				pDoc->UpdateAllViews(NULL);
 				return;
 			}
 		}
-		i++;
 	}
 	sx=point.x;
 	sy=point.y;
-	if(pDoc->ap!=-1 || 0==pm->padf.GetCount())
+	if(pDoc->pAPadf != NULL || 0==pm->vline.padf_list.GetCount())
 		InsertPadf(PADF_PROCESS,0,0);
 	else
-		InsertPadf(PADF_COMMENT,0,0);
+		InsertPadf(PADF_COMMENT, 0, 0);
+//	pDoc->pAPadf = pPadf;
 }
 
 BOOL CVEView::CheckString(CString& str)
@@ -1510,10 +1331,10 @@ void CVEView::InsertPadf2(int type1, int type2, int mode)
 
 	pCls=(CClass*)pDoc->cls.GetAt(pDoc->cls.FindIndex(pDoc->ac));
 	pm=(CModule*)pCls->mdl.GetAt(pCls->mdl.FindIndex(pDoc->am));
-	lpos=pm->padf.GetHeadPosition();
+	lpos=pm->vline.padf_list.GetHeadPosition();
 	count=0;
 	while(lpos) {
-		pPadf=(CPadf*)pm->padf.GetNext(lpos);
+		pPadf=(CPadf*)pm->vline.padf_list.GetNext(lpos);
 		if(pPadf->type>=PADF_PROCESS && pPadf->type<=PADF_REPEAT)
 			count++;
 	}
@@ -1522,9 +1343,9 @@ void CVEView::InsertPadf2(int type1, int type2, int mode)
 		sy=16;
 		InsertPadf(type1,type2,mode);
 	} else
-		if (pDoc->ap!=-1) {
+		if (pDoc->pAPadf==NULL) {
 			pm=(CModule*)pCls->mdl.GetAt(pCls->mdl.FindIndex(pDoc->am));
-			pPadf=pDoc->GetPadf(pm, pDoc->ap);
+			pPadf=pDoc->pAPadf;
 			sx = pPadf->rect.left;
 			sy = pPadf->rect.bottom + 16;
 			InsertPadf(type1,type2,mode);
@@ -1578,7 +1399,7 @@ void CVEView::OnUpdatePadproperty(CCmdUI* pCmdUI)
 	// TODO: この位置に command update UI ハンドラ用のコードを追加してください
 	CVEDoc* pDoc = GetDocument();
 
-	pCmdUI->Enable(pDoc->am!=-1 && pDoc->ap!=-1);
+	pCmdUI->Enable(pDoc->am!=-1 && pDoc->pAPadf==NULL);
 }
 
 void CVEView::OnMouseMove(UINT nFlags, CPoint point) 
@@ -1596,9 +1417,9 @@ void CVEView::OnMouseMove(UINT nFlags, CPoint point)
 	GetParentFrame()->SetActiveView(this, FALSE);	// このビューをアクティブにする
 	pos = GetScrollPosition();
 	pm=(CModule*)pCls->mdl.GetAt(pCls->mdl.FindIndex(pDoc->am));
-	POSITION lpos=pm->padf.GetHeadPosition();
+	POSITION lpos=pm->vline.padf_list.GetHeadPosition();
 	while(lpos) {
-		pPadf=(CPadf*)pm->padf.GetNext(lpos);
+		pPadf=(CPadf*)pm->vline.padf_list.GetNext(lpos);
 		if (pPadf->type>=PADF_PROCESS && pPadf->type<=PADF_REPEAT) {
 			rt.m_rect = pPadf->rect;
 			rt.m_rect.left -= pos.x;
@@ -1616,7 +1437,7 @@ void CVEView::OnMouseMove(UINT nFlags, CPoint point)
 	for(int i=0; i<pm->ret_pointer; i++)
 		m_toolTip_text+="*";
 	m_toolTip_text += " " + pm->name + "(" + pm->arg + ") \r\n" + pm->comment + "\r\nＰＡＤ図形と矩形コメント：";
-	str.Format("%d\r\nローカル変数：%d", pm->padf.GetCount(), pm->var.GetCount());
+	str.Format("%d\r\nローカル変数：%d", pm->vline.padf_list.GetCount(), pm->var.GetCount());
 	m_toolTip_text += str;
 	str.Format("\r\nグローバル変数：%d", pCls->var.GetCount());
 	m_toolTip_text += str;
@@ -1656,14 +1477,12 @@ void CVEView::OnViewAdjust()
 
 	pCls=(CClass*)pDoc->cls.GetAt(pDoc->cls.FindIndex(pDoc->ac));
 	pMdl=(CModule*)pCls->mdl.GetAt(pCls->mdl.FindIndex(pDoc->am));
-	if(pMdl->padf.GetCount()) { // モジュールにＰＡＤ図形などがあるかどうか
-		pad=0;
-		lpos2=pMdl->padf.GetHeadPosition();
+	if(pMdl->vline.padf_list.GetCount()) { // モジュールにＰＡＤ図形などがあるかどうか
+		lpos2=pMdl->vline.padf_list.GetHeadPosition();
 		while(lpos2) {
-			pPadf = (CPadf*)pMdl->padf.GetNext(lpos2);
-			if (pPadf->type>=PADF_PROCESS && pPadf->type<=PADF_REPEAT && -1==pPadf->prev_p)
+			pPadf = (CPadf*)pMdl->vline.padf_list.GetNext(lpos2);
+			if (pPadf->type>=PADF_PROCESS && pPadf->type<=PADF_REPEAT)
 				break;
-			pad++;
 		}
 		CVEView::Adjust(pMdl,pad);	// pMdlがモジュールのアドレス、pがＰＡＤ、１がインデント
 	}
@@ -1675,20 +1494,20 @@ void CVEView::Adjust(CModule* pMdl, int p)
 	CVEDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
 
-	int pad_num, next_p, diff;
+	int next_p;
 	BOOL do_while_flag=FALSE;
-	CPadf *pPadf, *pPrevPadf, *pNextPadf;
+	CPadf *pPadf;
 	
-	pPadf = pDoc->GetPadf(pMdl,p);
-	if (pPadf->type>=PADF_PROCESS && pPadf->type<=PADF_COMMENT && pPadf->prev_p != -1 && 0==pPadf->prev_p_pos) {
-		pPrevPadf = pDoc->GetPadf(pMdl, pPadf->prev_p);
-		diff = pPrevPadf->rect.left - pPadf->rect.left;
-		if(diff!=0) {
-			pPadf->rect.left += diff;
-			pPadf->rect.right += diff;
-		}
-	}
-	next_p = pDoc->GetNextPadfNum(pMdl,p,0);	// 下のＰＡＤ図形の番号を得る
+//	pPadf = pDoc->GetPadf(pMdl,p);
+//	if (pPadf->type>=PADF_PROCESS && pPadf->type<=PADF_COMMENT && pPadf->prev_p != -1 && 0==pPadf->prev_p_pos) {
+//		pPrevPadf = pDoc->GetPadf(pMdl, pPadf->prev_p);
+//		diff = pPrevPadf->rect.left - pPadf->rect.left;
+//		if(diff!=0) {
+//			pPadf->rect.left += diff;
+//			pPadf->rect.right += diff;
+//		}
+//	}
+//	next_p = pDoc->GetNextPadfNum(pMdl,p,0);	// 下のＰＡＤ図形の番号を得る
 	switch(pPadf->type) {	// ＰＡＤ図形の種類を得る */
 	case PADF_PROCESS:	// 処理
 		break;
@@ -1696,28 +1515,28 @@ void CVEView::Adjust(CModule* pMdl, int p)
 		if(pPadf->num_branch>0) {
 			switch(pPadf->type2) {
 			case 0:	// if文
-				if(-1!=(pad_num=pDoc->GetNextPadfNum(pMdl,p,1))) {
-					Adjust(pMdl,pad_num);
-				}
-				if(-1!=(pad_num=pDoc->GetNextPadfNum(pMdl,p,2))) {
-					Adjust(pMdl,pad_num);
-				}
+//				if(-1!=(pad_num=pDoc->GetNextPadfNum(pMdl,p,1))) {
+//					Adjust(pMdl,pad_num);
+//				}
+//				if(-1!=(pad_num=pDoc->GetNextPadfNum(pMdl,p,2))) {
+//					Adjust(pMdl,pad_num);
+//				}
 				break;
 			case 1:	// switch文
 				for(int pos=1; pos<=pPadf->num_branch; pos++) {
-					if(-1!=(pad_num=pDoc->GetNextPadfNum(pMdl,p,pos))) {
-						pNextPadf=pDoc->GetPadf(pMdl,pad_num);
-						Adjust(pMdl,pad_num);
-					}
+//					if(-1!=(pad_num=pDoc->GetNextPadfNum(pMdl,p,pos))) {
+//						pNextPadf=pDoc->GetPadf(pMdl,pad_num);
+//						Adjust(pMdl,pad_num);
+//					}
 				}
 				break;
 			}
 		}
 		break;
 	case PADF_REPEAT:	// 反復
-		if((pad_num=pDoc->GetNextPadfNum(pMdl,p,-1))!=-1) {
-			Adjust(pMdl,pad_num);
-		}
+//		if((pad_num=pDoc->GetNextPadfNum(pMdl,p,-1))!=-1) {
+//			Adjust(pMdl,pad_num);
+//		}
 		break;
 	}
 	if(next_p != -1) {
@@ -1742,20 +1561,20 @@ void CVEView::MoveUnderPadf(int padf_num, int move_x, int move_y)
 		return;
 	pos = GetScrollPosition();
 	pm=(CModule*)pCls->mdl.GetAt(pCls->mdl.FindIndex(pDoc->am));
-	pPrevPadf=(CPadf*)pm->padf.GetAt(pm->padf.FindIndex(padf_num));
+	pPrevPadf=(CPadf*)pm->vline.padf_list.GetAt(pm->vline.padf_list.FindIndex(padf_num));
 	int i=0;
-	POSITION lpos=pm->padf.GetHeadPosition();
+	POSITION lpos=pm->vline.padf_list.GetHeadPosition();
 	while(lpos) {
-		pPadf=(CPadf*)pm->padf.GetNext(lpos);
-		if (pPadf->prev_p==padf_num) {
-			pPadf->rect.left += move_x;
-			pPadf->rect.right += move_x;
-			pPadf->rect.top += move_y;
-			pPadf->rect.bottom += move_y;
+		pPadf=(CPadf*)pm->vline.padf_list.GetNext(lpos);
+//		if (pPadf->prev_p==padf_num) {
+//			pPadf->rect.left += move_x;
+//			pPadf->rect.right += move_x;
+		//	pPadf->rect.top += move_y;
+		//	pPadf->rect.bottom += move_y;
 			if(pPrevPadf->type==PADF_SELECTION && pPrevPadf->type2==1)
-				pPadf->case_y += move_y;
-			MoveUnderPadf(i, move_x, move_y);
-		}
+		//		pPadf->case_y += move_y;
+//			MoveUnderPadf(i, move_x, move_y);
+//		}
 		i++;
 	}
 }

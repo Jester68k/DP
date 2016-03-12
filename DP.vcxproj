@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{4333302C-1340-46FA-8E4D-5B289207A2FE}</ProjectGuid>
+    <ProjectGuid>{A62DEB18-32A4-4C0A-AEF1-05EB752E1B29}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -99,60 +99,76 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="dp\dp\ChildFrm.cpp" />
-    <ClCompile Include="dp\dp\Class.cpp" />
-    <ClCompile Include="dp\dp\ClassDlg.cpp" />
-    <ClCompile Include="dp\dp\ClassView.cpp" />
-    <ClCompile Include="dp\dp\LeftView.cpp" />
-    <ClCompile Include="dp\dp\MainFrm.cpp" />
-    <ClCompile Include="dp\dp\Module.cpp" />
-    <ClCompile Include="dp\dp\ModulePropertyPage1.cpp" />
-    <ClCompile Include="dp\dp\ModulePropertySheet.cpp" />
-    <ClCompile Include="dp\dp\OptionDlg.cpp" />
-    <ClCompile Include="dp\dp\OutputWnd.cpp" />
-    <ClCompile Include="dp\dp\Padf.cpp" />
-    <ClCompile Include="dp\dp\PadfPropertyPage1.cpp" />
-    <ClCompile Include="dp\dp\PadfPropertySheet.cpp" />
-    <ClCompile Include="dp\dp\PropertiesWnd.cpp" />
-    <ClCompile Include="dp\dp\stdafx.cpp" />
-    <ClCompile Include="dp\dp\Var.cpp" />
-    <ClCompile Include="dp\dp\VarDlg.cpp" />
-    <ClCompile Include="dp\dp\VarView.cpp" />
-    <ClCompile Include="dp\dp\VE.cpp" />
-    <ClCompile Include="dp\dp\VEDoc.cpp" />
-    <ClCompile Include="dp\dp\VEView.cpp" />
+    <ClCompile Include="ChildFrm.cpp" />
+    <ClCompile Include="Class.cpp" />
+    <ClCompile Include="ClassDlg.cpp" />
+    <ClCompile Include="ClassView.cpp" />
+    <ClCompile Include="LeftView.cpp" />
+    <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="Module.cpp" />
+    <ClCompile Include="ModulePropertyPage1.cpp" />
+    <ClCompile Include="ModulePropertySheet.cpp" />
+    <ClCompile Include="OptionDlg.cpp" />
+    <ClCompile Include="OutputWnd.cpp" />
+    <ClCompile Include="Padf.cpp" />
+    <ClCompile Include="PadfPropertyPage1.cpp" />
+    <ClCompile Include="PadfPropertySheet.cpp" />
+    <ClCompile Include="PropertiesWnd.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="Var.cpp" />
+    <ClCompile Include="VarDlg.cpp" />
+    <ClCompile Include="VarView.cpp" />
+    <ClCompile Include="VE.cpp" />
+    <ClCompile Include="VEDoc.cpp" />
+    <ClCompile Include="VEView.cpp" />
+    <ClCompile Include="VLine.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="dp\dp\ChildFrm.h" />
-    <ClInclude Include="dp\dp\Class.h" />
-    <ClInclude Include="dp\dp\ClassDlg.h" />
-    <ClInclude Include="dp\dp\ClassView.h" />
-    <ClInclude Include="dp\dp\LeftView.h" />
-    <ClInclude Include="dp\dp\MainFrm.h" />
-    <ClInclude Include="dp\dp\Module.h" />
-    <ClInclude Include="dp\dp\ModulePropertyPage1.h" />
-    <ClInclude Include="dp\dp\ModulePropertySheet.h" />
-    <ClInclude Include="dp\dp\OptionDlg.h" />
-    <ClInclude Include="dp\dp\OutputWnd.h" />
-    <ClInclude Include="dp\dp\Padf.h" />
-    <ClInclude Include="dp\dp\PadfPropertyPage1.h" />
-    <ClInclude Include="dp\dp\PadfPropertySheet.h" />
-    <ClInclude Include="dp\dp\PropertiesWnd.h" />
-    <ClInclude Include="dp\dp\Resource.h" />
-    <ClInclude Include="dp\dp\stdafx.h" />
-    <ClInclude Include="dp\dp\targetver.h" />
-    <ClInclude Include="dp\dp\Var.h" />
-    <ClInclude Include="dp\dp\VarDlg.h" />
-    <ClInclude Include="dp\dp\VarView.h" />
-    <ClInclude Include="dp\dp\VE.h" />
-    <ClInclude Include="dp\dp\VEDoc.h" />
-    <ClInclude Include="dp\dp\VEView.h" />
+    <ClInclude Include="ChildFrm.h" />
+    <ClInclude Include="Class.h" />
+    <ClInclude Include="ClassDlg.h" />
+    <ClInclude Include="ClassView.h" />
+    <ClInclude Include="LeftView.h" />
+    <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="Module.h" />
+    <ClInclude Include="ModulePropertyPage1.h" />
+    <ClInclude Include="ModulePropertySheet.h" />
+    <ClInclude Include="OptionDlg.h" />
+    <ClInclude Include="OutputWnd.h" />
+    <ClInclude Include="Padf.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="PadfPropertyPage1.h" />
+    <ClInclude Include="PadfPropertySheet.h" />
+    <ClInclude Include="PropertiesWnd.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="Var.h" />
+    <ClInclude Include="VarDlg.h" />
+    <ClInclude Include="VarView.h" />
+    <ClInclude Include="VE.h" />
+    <ClInclude Include="VEDoc.h" />
+    <ClInclude Include="VEView.h" />
+    <ClInclude Include="VLine.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="dp\dp\VE.rc" />
+    <ResourceCompile Include="VE.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="dp\dp\res\VE.rc2" />
+    <None Include="res\VE.rc2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\output_wnd.ico" />
+    <Image Include="res\output_wnd_hc.ico" />
+    <Image Include="res\properties.bmp" />
+    <Image Include="res\properties_hc.bmp" />
+    <Image Include="res\properties_wnd.ico" />
+    <Image Include="res\properties_wnd_hc.ico" />
+    <Image Include="res\Toolbar.bmp" />
+    <Image Include="res\Toolbar256.bmp" />
+    <Image Include="res\VE.ico" />
+    <Image Include="res\VEDoc.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
